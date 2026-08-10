@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <meta name="view-transition" content="same-origin">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Sidebar -->
+        <app-sidebar></app-sidebar>
+
+        <!-- Main -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <app-topbar></app-topbar>
+
+            <!-- Page Content -->
+            <div class="page-inner smaller">
+
+                <div class="page-head">
+                    <div>
+                        <h2>Profile</h2>
+                        <p>Your account details in this browser.</p>
+                    </div>
+                </div>
+
+                <div class="panel profile-card">
+                    <div class="profile-avatar" id="profile-avatar">?</div>
+                    <div class="profile-info">
+                        <h3 id="profile-name">Guest</h3>
+                        <p id="profile-email">Not signed in</p>
+                        <span class="status-pill ok" id="profile-role">guest</span>
+                    </div>
+                </div>
+
+                <div class="panel settings-section">
+                    <h3 class="settings-title"><i class="ph ph-identification-card"></i> Account</h3>
+                    <div class="setting-row">
+                        <div><strong>Name</strong><small>User's full name.</small></div>
+                        <span id="profile-row-name" style="font-family: var(--font-mono); color: var(--text-muted);">-</span>
+                    </div>
+                    <div class="setting-row">
+                        <div><strong>Email</strong><small>Used for sign in.</small></div>
+                        <span id="profile-row-email" style="font-family: var(--font-mono); color: var(--text-muted);">-</span>
+                    </div>
+                    <div class="setting-row">
+                        <div><strong>Role</strong><small>Determines permissions.</small></div>
+                        <span id="profile-row-role" style="font-family: var(--font-mono); color: var(--text-muted);">-</span>
+                    </div>
+                    <div class="setting-row">
+                        <div><strong>Signed out</strong><small>Sign out of this browser session.</small></div>
+                        <button class="btn" id="profile-logout"><i class="ph ph-sign-out"></i> Sign out</button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/topbar.js"></script>
+</body>
+</html>

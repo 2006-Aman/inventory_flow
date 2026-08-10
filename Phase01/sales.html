@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Entry</title>
+
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/sales.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <meta name="view-transition" content="same-origin">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Sidebar -->
+        <app-sidebar></app-sidebar>
+
+        <!-- Main -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <app-topbar></app-topbar>
+
+            <!-- Page Content -->
+            <div class="page-inner medium">
+
+                <div class="page-head">
+                    <div>
+                        <h2>Sales Entry</h2>
+                        <p>Pick a product and a quantity. The sale is stored, stock is reduced, and the dashboard, forecast, reports and reorder pages update automatically.</p>
+                    </div>
+                    <div class="actions">
+                        <a class="btn" href="sales-history.html" style="text-decoration: none;"><i class="ph ph-clock-counter-clockwise"></i> Sales History</a>
+                    </div>
+                </div>
+
+                <div class="sales-layout">
+                    <!-- Left: New Sale form -->
+                    <div class="panel sales-form-panel">
+                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 18px;">New Sale</h3>
+
+                        <div class="field">
+                            <label>Product</label>
+                            <select id="sale-product">
+                                <option value="">-- Select a product --</option>
+                            </select>
+                            <div class="field-error"></div>
+                        </div>
+
+                        <div class="product-info-card" id="product-info-card" style="display: none;">
+                            <div class="info-grid">
+                                <div><span>Price</span><strong id="info-price">-</strong></div>
+                                <div><span>Stock</span><strong id="info-stock">-</strong></div>
+                                <div><span>Unit profit</span><strong id="info-profit">-</strong></div>
+                                <div><span>Status</span><strong id="info-status">-</strong></div>
+                            </div>
+                        </div>
+
+                        <div class="field" style="margin-top: 16px;">
+                            <label>Quantity</label>
+                            <input id="sale-quantity" type="number" min="1" value="1">
+                            <div class="field-error"></div>
+                        </div>
+
+                        <div class="field" style="margin-top: 16px;">
+                            <label>Customer</label>
+                            <input id="sale-customer" type="text" placeholder="Walk-in Customer">
+                        </div>
+
+                        <div class="field" style="margin-top: 16px;">
+                            <label>Date</label>
+                            <input id="sale-date" type="datetime-local">
+                        </div>
+
+                        <div class="sale-total" id="sale-total" style="display: none;">
+                            <span>Total</span>
+                            <strong id="sale-total-amount">$0.00</strong>
+                            <small id="sale-total-profit">Profit $0.00</small>
+                        </div>
+
+                        <button class="btn btn-gradient btn-block" id="sale-save"><i class="ph ph-check"></i> Save Sale</button>
+                    </div>
+
+                    <!-- Right: Today's summary + recent sales -->
+                    <div class="panel">
+                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 18px;">Today's Sales</h3>
+                        <div class="today-stats">
+                            <div><span>Orders</span><strong id="today-orders">0</strong></div>
+                            <div><span>Revenue</span><strong id="today-revenue">$0.00</strong></div>
+                            <div><span>Profit</span><strong id="today-profit">$0.00</strong></div>
+                        </div>
+
+                        <h3 style="font-size: 15px; color: #fff; margin: 22px 0 12px;">Recent Sales</h3>
+                        <div id="recent-sales-list" class="recent-sales-list"></div>
+                        <a href="sales-history.html" class="view-all-link" style="margin-top: 12px;">View all sales <i class="ph ph-arrow-right"></i></a>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/sales.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/topbar.js"></script>
+</body>
+</html>

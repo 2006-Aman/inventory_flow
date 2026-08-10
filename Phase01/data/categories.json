@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "name": "Electronics",
+    "description": "Gadgets, accessories and tech products"
+  },
+  {
+    "id": 2,
+    "name": "Groceries",
+    "description": "Daily kitchen staples and grains"
+  },
+  {
+    "id": 3,
+    "name": "Beverages",
+    "description": "Drinks, tea, coffee and juices"
+  },
+  {
+    "id": 4,
+    "name": "Snacks",
+    "description": "Quick bites and packaged snacks"
+  },
+  {
+    "id": 5,
+    "name": "Personal Care",
+    "description": "Hygiene and body care products"
+  },
+  {
+    "id": 6,
+    "name": "Home & Kitchen",
+    "description": "Kitchen tools and home essentials"
+  },
+  {
+    "id": 7,
+    "name": "Stationery",
+    "description": "Office and school stationery"
+  },
+  {
+    "id": 8,
+    "name": "Dairy",
+    "description": "Milk, butter, cheese and paneer"
+  },
+  {
+    "id": 9,
+    "name": "Frozen Foods",
+    "description": "Frozen meals and vegetables"
+  },
+  {
+    "id": 10,
+    "name": "Cleaning Supplies",
+    "description": "Home cleaning and laundry products"
+  }
+]

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help</title>
+
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/help.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <meta name="view-transition" content="same-origin">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Sidebar -->
+        <app-sidebar></app-sidebar>
+
+        <!-- Main -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <app-topbar></app-topbar>
+
+            <!-- Page Content -->
+            <div class="page-inner small">
+
+                <div class="page-head">
+                    <div>
+                        <h2>Help &amp; Guide</h2>
+                        <p>How InventoryIQ works and how to use each screen.</p>
+                    </div>
+                </div>
+
+                <div class="panel help-section">
+                    <h3 class="help-title"><i class="ph ph-target"></i> The Reorder Point</h3>
+                    <p>
+                        Every product is reordered using the classic reorder point formula:
+                    </p>
+                    <div class="formula">
+                        Reorder Point = (Lead Time &times; Average Daily Demand) + Safety Stock
+                    </div>
+                    <p>
+                        <strong>Lead time</strong> is how many days a reorder takes to arrive.
+                        <strong>Average daily demand</strong> is computed from the last 90 days of recorded sales.
+                        <strong>Safety stock</strong> is the buffer you keep for demand spikes or late deliveries.
+                    </p>
+                    <p>
+                        When current stock drops to the reorder point, the product is flagged <span class="status-pill warn">Low Stock</span>,
+                        below safety stock becomes <span class="status-pill danger">Critical</span>, and at zero it is
+                        <span class="status-pill danger">Out of Stock</span>.
+                    </p>
+                </div>
+
+                <div class="panel help-section">
+                    <h3 class="help-title"><i class="ph ph-trend-up"></i> Demand Forecasting</h3>
+                    <p>
+                        The forecast uses a <strong>7-day moving average</strong> of actual daily sales.
+                        Each day's projected demand is the average of the seven days before it. This smooths out
+                        daily noise while staying responsive to recent trends.
+                    </p>
+                    <p>
+                        The Forecast page compares the moving-average forecast against actual sales for the last two
+                        weeks, ranks products by expected 7-day demand, and shows how many days of stock remain for
+                        each product.
+                    </p>
+                </div>
+
+                <div class="panel help-section">
+                    <h3 class="help-title"><i class="ph ph-grid-four"></i> Screens</h3>
+                    <div class="help-grid">
+                        <div><strong>Dashboard</strong><small>Live KPIs, revenue trend, sales by category, stock gauge, monthly sales.</small></div>
+                        <div><strong>Inventory</strong><small>Full product list with search, filters, sorting, pagination, edit/stock/delete.</small></div>
+                        <div><strong>Add Product</strong><small>Create a product; SKU and barcode are generated for you.</small></div>
+                        <div><strong>Sales Entry</strong><small>Record a sale &mdash; stock drops and every other page updates.</small></div>
+                        <div><strong>Sales History</strong><small>Searchable, filterable history with CSV export.</small></div>
+                        <div><strong>Forecast</strong><small>Moving-average demand forecasts per product.</small></div>
+                        <div><strong>Reorder</strong><small>Products ranked against their reorder point with one-click restock.</small></div>
+                        <div><strong>Reports</strong><small>Revenue, profit and top products over any date range.</small></div>
+                        <div><strong>Analytics</strong><small>Day-of-week patterns, monthly trends, stock health.</small></div>
+                        <div><strong>Settings</strong><small>Theme, database export/import/reset.</small></div>
+                    </div>
+                </div>
+
+                <div class="panel help-section">
+                    <h3 class="help-title"><i class="ph ph-database"></i> Where Is My Data?</h3>
+                    <p>
+                        Everything is stored in this browser's <strong>LocalStorage</strong>. On first open the app
+                        seeds itself from the JSON files in <code>data/</code>. Use
+                        <strong>Settings &rarr; Export</strong> to back up, and <strong>Import</strong> to restore on
+                        another machine.
+                    </p>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/topbar.js"></script>
+</body>
+</html>

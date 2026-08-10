@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics</title>
+
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/analytics.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <meta name="view-transition" content="same-origin">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Sidebar -->
+        <app-sidebar></app-sidebar>
+
+        <!-- Main -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <app-topbar></app-topbar>
+
+            <!-- Page Content -->
+            <div class="page-inner">
+
+                <div class="page-head">
+                    <div>
+                        <h2>Analytics</h2>
+                        <p>Inventory and sales intelligence derived live from LocalStorage.</p>
+                    </div>
+                </div>
+
+                <!-- Analytics KPI cards -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <span class="kpi-label"><i class="ph ph-coin"></i> Inventory value</span>
+                        <strong class="kpi-value" id="ana-value">$0</strong>
+                        <small class="kpi-sub">at cost price</small>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label"><i class="ph ph-swap-horizontal"></i> Stock turnover</span>
+                        <strong class="kpi-value" id="ana-turnover">-</strong>
+                        <small class="kpi-sub">units sold / avg stock (30d)</small>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label"><i class="ph ph-chart-bar"></i> Best category</span>
+                        <strong class="kpi-value" id="ana-best-cat" style="font-size: 20px;">-</strong>
+                        <small class="kpi-sub">by 30-day revenue</small>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label"><i class="ph ph-basket"></i> Avg units / order</span>
+                        <strong class="kpi-value" id="ana-avg-units">-</strong>
+                        <small class="kpi-sub">across all sales</small>
+                    </div>
+                </div>
+
+                <div class="analytics-layout">
+                    <!-- Sales by day of week -->
+                    <div class="panel">
+                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 6px;">Sales by Day of Week</h3>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Last 90 days. Spot your busiest days.</p>
+                        <div class="chart-box" style="height: 250px;">
+                            <canvas id="chart-dayofweek"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Revenue vs orders by month -->
+                    <div class="panel">
+                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 6px;">Revenue vs Orders</h3>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Last 6 months.</p>
+                        <div class="chart-box" style="height: 250px;">
+                            <canvas id="chart-revenue-orders"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analytics-layout">
+                    <!-- Stock status distribution -->
+                    <div class="panel">
+                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 6px;">Stock Health</h3>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Share of products by stock status.</p>
+                        <div class="chart-box" style="height: 240px;">
+                            <canvas id="chart-stock-health"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Top categories table -->
+                    <div class="panel">
+                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 12px;">Top Categories</h3>
+                        <div class="table-wrap">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th class="num">Products</th>
+                                        <th class="num">Units sold</th>
+                                        <th class="num">Revenue</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ana-categories-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/topbar.js"></script>
+</body>
+</html>

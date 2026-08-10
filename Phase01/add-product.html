@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/add-product.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <meta name="view-transition" content="same-origin">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Sidebar -->
+
+        <app-sidebar></app-sidebar>
+
+        <!-- Main -->
+
+        <main class="main-content">
+
+            <!-- Topbar -->
+
+            <app-topbar></app-topbar>
+
+            <!-- Page Content -->
+            <section class="page-content">
+                <p class="page-subtitle">Lead time and safety stock feed straight into the reorder point formula, so fill them in carefully.</p>
+                
+                <div class="add-product-layout">
+                    <!-- Left Panel: Product Details -->
+                    <div class="left-column">
+                        <h3>Product details</h3>
+                        
+                        <div class="form-grid">
+                            <div class="input-wrapper single-line">
+                                <input type="text" id="product-name" placeholder="Product name">
+                                <div class="field-error"></div>
+                            </div>
+                            
+                            <div class="input-wrapper single-line">
+                                <input type="text" id="sku" placeholder="SKU (auto-generated)">
+                                <div class="field-error"></div>
+                            </div>
+                            
+                            <div class="input-wrapper single-line">
+                                <input type="text" id="category" list="category-list" placeholder="Category">
+                                <datalist id="category-list"></datalist>
+                                <div class="field-error"></div>
+                            </div>
+                            
+                            <div class="input-wrapper single-line">
+                                <input type="text" id="supplier" placeholder="Supplier">
+                                <div class="field-error"></div>
+                            </div>
+                            
+                            <div class="input-wrapper single-line">
+                                <input type="number" id="cost-price" min="0" step="0.01" placeholder="Cost price ($)">
+                                <div class="field-error"></div>
+                            </div>
+                            
+                            <div class="input-wrapper single-line">
+                                <input type="number" id="selling-price" min="0" step="0.01" placeholder="Selling price ($)">
+                                <div class="field-error"></div>
+                            </div>
+
+                            <div class="input-wrapper single-line">
+                                <input type="number" id="opening-stock" min="0" placeholder="Opening stock">
+                                <div class="field-error"></div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <div class="input-wrapper">
+                                    <span class="input-label">Safety stock</span>
+                                    <input type="number" id="safety-stock" value="20" min="0">
+                                    <div class="field-error"></div>
+                                </div>
+                                <span class="input-hint">Buffer kept for demand spikes</span>
+                            </div>
+
+                            <div class="input-group full-width">
+                                <div class="input-wrapper">
+                                    <span class="input-label">Lead time (days)</span>
+                                    <input type="number" id="lead-time" value="7" min="1">
+                                    <div class="field-error"></div>
+                                </div>
+                                <span class="input-hint">Supplier delivery window</span>
+                            </div>
+
+                            <div class="input-group full-width" style="margin-top: 10px;">
+                                <span class="input-label" style="margin-bottom: 8px;">Description</span>
+                                <div class="input-wrapper textarea-wrapper">
+                                    <textarea id="description"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <button class="btn-save" id="save-product-btn">Save product</button>
+                            <button class="btn-cancel" id="cancel-btn">Cancel</button>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel: Live Preview & Codes -->
+                    <div class="right-column">
+                        <div class="panel">
+                            <h3>Live preview</h3>
+                            
+                            <div class="preview-card">
+                                <h4 id="preview-title">Your product name</h4>
+                            </div>
+
+                            <ul class="stats-list">
+                                <li>
+                                    <span class="stat-label">Category</span>
+                                    <span class="stat-value" id="preview-category">&mdash;</span>
+                                </li>
+                                <li>
+                                    <span class="stat-label">Supplier</span>
+                                    <span class="stat-value" id="preview-supplier">Unassigned</span>
+                                </li>
+                                <li>
+                                    <span class="stat-label">Unit profit</span>
+                                    <span class="stat-value" id="preview-profit">$0</span>
+                                </li>
+                                <li>
+                                    <span class="stat-label">Margin</span>
+                                    <span class="stat-value" id="preview-margin">0.0%</span>
+                                </li>
+                                <li>
+                                    <span class="stat-label">Stock value</span>
+                                    <span class="stat-value" id="preview-stock-value">$0</span>
+                                </li>
+                                <li>
+                                    <span class="stat-label">Starting ROP estimate</span>
+                                    <span class="stat-value" id="preview-rop">0 units</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="panel codes-panel">
+                            <h3>Codes</h3>
+                            <p>Generated from the SKU</p>
+                            
+                            <div class="codes-grid">
+                                <div class="code-item">
+                                    <div class="barcode-box">
+                                        <div class="bar tall"></div><div class="bar short"></div><div class="bar thick tall"></div><div class="bar tall"></div>
+                                        <div class="bar short"></div><div class="bar thick tall"></div><div class="bar tall"></div><div class="bar short thick"></div>
+                                        <div class="bar tall"></div><div class="bar thick tall"></div><div class="bar tall"></div><div class="bar short"></div>
+                                        <div class="bar tall thick"></div>
+                                    </div>
+                                    <span><i class="ph ph-barcode"></i> <span id="preview-sku">Generating...</span></span>
+                                </div>
+                                
+                                <div class="code-item">
+                                    <div class="qr-box">
+                                        <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot hidden"></div><div class="qr-dot"></div>
+                                        <div class="qr-dot"></div><div class="qr-dot hidden"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+                                        <div class="qr-dot hidden"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot hidden"></div>
+                                        <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot hidden"></div><div class="qr-dot"></div>
+                                    </div>
+                                    <span><i class="ph ph-qr-code"></i> <span id="preview-barcode">Generating...</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </section>
+
+        </main>
+    </div>
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/add-product.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/topbar.js"></script>
+</body>
+</html>
+
+

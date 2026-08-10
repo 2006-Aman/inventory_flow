@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InventoryIQ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script>
+        // Landing redirect: signed-in users go to the dashboard, otherwise to sign in.
+        initializeDatabase().then(function () {
+            window.location.replace(getCurrentUser() ? 'dashboard.html' : 'login.html');
+        });
+    </script>
+</head>
+
+<body style="background:#060a12;">
+    <p style="color:#64748b; font-family:monospace; padding:40px; text-align:center;">Redirecting&hellip;</p>
+</body>
+</html>

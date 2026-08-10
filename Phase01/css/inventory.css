@@ -1,0 +1,22 @@
+/* inventory.css - Layout tweaks for the inventory page.
+   The reusable components (tables, toolbar, modals) live in dashboard.css. */
+
+/* Keep the stock column a little more prominent */
+.data-table td.stock-cell {
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+/* Status pill margin inside table cells */
+.data-table .status-pill {
+  padding: 3px 10px;
+}
+
+/* Hide the native number spinners on modal inputs for a cleaner look */
+#edit-modal input[type="number"],
+#stock-modal input[type="number"]::-webkit-inner-spin-button,
+#edit-modal input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}

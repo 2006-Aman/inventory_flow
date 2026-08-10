@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <meta name="view-transition" content="same-origin">
+</head>
+
+<body class="auth-body">
+
+    <div class="auth-card">
+        <div class="auth-logo">
+            <div class="logo-badge"><i class="ph ph-storefront"></i></div>
+            <h1>InventoryIQ</h1>
+            <p>Reorder Point &amp; Demand Forecasting Tool</p>
+        </div>
+
+        <div class="auth-error-banner" id="auth-error"></div>
+
+        <form class="auth-form" id="login-form" novalidate>
+            <div class="field">
+                <label>Email</label>
+                <input id="login-email" type="email" placeholder="you@company.com" autocomplete="email">
+            </div>
+            <div class="field">
+                <label>Password</label>
+                <input id="login-password" type="password" placeholder="Your password" autocomplete="current-password">
+            </div>
+            <button class="btn btn-gradient" type="submit"><i class="ph ph-sign-in"></i> Sign In</button>
+        </form>
+
+        <p class="auth-alt">Don't have an account? <a href="signup.html">Create one</a></p>
+
+        <div class="demo-accounts">
+            <strong>Demo accounts</strong><br>
+            admin: <code>admin@stocksense.com / admin123</code><br>
+            manager: <code>manager@stocksense.com / manager123</code><br>
+            user: <code>user@stocksense.com / user123</code>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        initLoginPage();
+    </script>
+</body>
+</html>

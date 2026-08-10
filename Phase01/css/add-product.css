@@ -1,0 +1,323 @@
+/* =========================================
+   Add Product Page Specific Styles
+   ========================================= */
+
+.page-subtitle {
+  color: #8b949e;
+  font-size: 14px;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.add-product-layout {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Panel Styles */
+.panel {
+  background: #15181e;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.panel h3 {
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 24px;
+  font-weight: 600;
+}
+
+/* Form Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Custom Input Wrapper */
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-wrapper {
+  position: relative;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 8px 16px;
+  transition: border-color 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 56px;
+}
+
+.input-wrapper:focus-within {
+  border-color: #38bdf8;
+}
+
+.input-label {
+  font-size: 11px;
+  color: #8b949e;
+  margin-bottom: 2px;
+}
+
+.input-wrapper input,
+.input-wrapper textarea {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+}
+
+.input-wrapper input::placeholder,
+.input-wrapper textarea::placeholder {
+  color: #586069;
+}
+
+/* Handle specific single-line placeholders where label IS the placeholder initially */
+.input-wrapper.single-line {
+  justify-content: center;
+}
+.input-wrapper.single-line input {
+  font-size: 14px;
+}
+
+.input-hint {
+  font-size: 11px;
+  color: #8b949e;
+  margin-top: 8px;
+  margin-left: 12px;
+}
+
+/* Textarea specific */
+.input-wrapper.textarea-wrapper {
+  padding: 16px;
+  border-radius: 24px;
+  min-height: 120px;
+  justify-content: flex-start;
+}
+.input-wrapper textarea {
+  resize: none;
+  min-height: 60px;
+}
+.rich-text-toolbar {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+  justify-content: center;
+  padding-top: 10px;
+}
+.rich-text-toolbar i {
+  color: #8b949e;
+  cursor: pointer;
+  font-size: 16px;
+}
+.rich-text-toolbar i:hover {
+  color: #fff;
+}
+
+/* Live Preview Card */
+.preview-card {
+  background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+  border-radius: 20px;
+  padding: 40px 20px;
+  text-align: center;
+  color: #fff;
+  margin-bottom: 24px;
+}
+
+.preview-card h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Stats List */
+.stats-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.stats-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 13px;
+}
+
+.stats-list li:last-child {
+  border-bottom: none;
+}
+
+.stats-list .stat-label {
+  color: #8b949e;
+}
+
+.stats-list .stat-value {
+  color: #fff;
+  font-weight: 500;
+}
+
+/* Codes Panel */
+.codes-panel {
+  margin-top: 24px;
+}
+
+.codes-panel p {
+  font-size: 13px;
+  color: #8b949e;
+}
+
+/* Left Column adjustments */
+.left-column {
+  background: #15181e;
+  border: 1px solid var(--border-color);
+  border-radius: 25px;
+  padding: 24px;
+}
+
+.left-column h3 {
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 24px;
+  font-weight: 600;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.btn-save {
+  background: #0ea5e9;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 24px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 14px;
+}
+
+.btn-save:hover {
+  background: #0284c7;
+}
+
+.btn-cancel {
+  background: transparent;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 24px;
+  border: 1px solid #30363d;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.btn-cancel:hover {
+  background: #21262d;
+}
+
+/* Codes Grid Mocks */
+.codes-grid {
+  display: flex;
+  gap: 32px;
+  margin-top: 24px;
+}
+
+.code-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.code-item span {
+  font-size: 10px;
+  color: #8b949e;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Barcode */
+.barcode-box {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 48px;
+}
+.barcode-box .bar {
+  background: #fff;
+  width: 2px;
+}
+.barcode-box .bar.thick { width: 4px; }
+.barcode-box .bar.short { height: 32px; }
+.barcode-box .bar.tall { height: 48px; }
+
+/* QR Code */
+.qr-box {
+  width: 64px;
+  height: 64px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 2px;
+}
+.qr-dot {
+  background: #fff;
+  border-radius: 2px;
+}
+.qr-dot.hidden {
+  background: transparent;
+}
+
+/* Custom Number Input Spinners for Dark Mode */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  filter: invert(1);
+  opacity: 0.5;
+  cursor: pointer;
+  height: 24px;
+}
+
+input[type="number"]::-webkit-inner-spin-button:hover,
+input[type="number"]::-webkit-outer-spin-button:hover {
+  opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .add-product-layout { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .panel { padding: 18px 16px; }
+  .panel h3 { font-size: 16px; }
+}
+
+@media (max-width: 420px) {
+  .full-width .form-grid { grid-template-columns: 1fr; }
+}

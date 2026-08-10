@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/settings.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <meta name="view-transition" content="same-origin">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Sidebar -->
+        <app-sidebar></app-sidebar>
+
+        <!-- Main -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <app-topbar></app-topbar>
+
+            <!-- Page Content -->
+            <div class="page-inner small">
+
+                <div class="page-head">
+                    <div>
+                        <h2>Settings</h2>
+                        <p>Theme, data management and system information. All data lives in this browser's LocalStorage.</p>
+                    </div>
+                </div>
+
+                <!-- Appearance -->
+                <div class="panel settings-section">
+                    <h3 class="settings-title"><i class="ph ph-palette"></i> Appearance</h3>
+                    <div class="setting-row">
+                        <div>
+                            <strong>Dark / Light theme</strong>
+                            <small>Switch between the dark and light look. Saved automatically.</small>
+                        </div>
+                        <div class="setting-control">
+                            <label class="switch">
+                                <input type="checkbox" id="settings-theme-toggle">
+                                <span class="slider"></span>
+                            </label>
+                            <span id="settings-theme-label" style="font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);">Dark</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data management -->
+                <div class="panel settings-section">
+                    <h3 class="settings-title"><i class="ph ph-database"></i> Data Management</h3>
+                    <div class="setting-row">
+                        <div>
+                            <strong>Export database</strong>
+                            <small>Download all products, sales, categories and users as a JSON backup.</small>
+                        </div>
+                        <button class="btn" id="settings-export"><i class="ph ph-download"></i> Export</button>
+                    </div>
+                    <div class="setting-row">
+                        <div>
+                            <strong>Import database</strong>
+                            <small>Restore from a previously exported JSON backup. Replaces current data.</small>
+                        </div>
+                        <button class="btn" id="settings-import"><i class="ph ph-upload"></i> Import</button>
+                        <input type="file" id="settings-import-file" accept=".json" style="display: none;">
+                    </div>
+                    <div class="setting-row">
+                        <div>
+                            <strong>Reset database</strong>
+                            <small>Erase everything and reseed the demo data. This cannot be undone.</small>
+                        </div>
+                        <button class="btn btn-danger" id="settings-reset"><i class="ph ph-trash"></i> Reset</button>
+                    </div>
+                </div>
+
+                <!-- About -->
+                <div class="panel settings-section">
+                    <h3 class="settings-title"><i class="ph ph-info"></i> About</h3>
+                    <div class="setting-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                        <strong>InventoryIQ &mdash; Reorder Point &amp; Demand Forecasting Tool</strong>
+                        <small>
+                            Final year project. Pure HTML/CSS/JS with LocalStorage. Reorder point =
+                            (lead time &times; average daily demand) + safety stock. Demand forecast uses a
+                            simple 7-day moving average.
+                        </small>
+                        <small id="settings-stats" style="font-family: var(--font-mono); color: var(--text-muted);"></small>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Reset confirm modal -->
+    <div class="modal-backdrop" id="reset-modal">
+        <div class="modal" style="max-width: 420px;">
+            <div class="modal-head">
+                <h3>Reset database?</h3>
+                <button class="icon-action" data-close="reset-modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 13px; color: var(--text-muted);">
+                    All current data will be permanently erased and replaced with the demo dataset. Continue?
+                </p>
+            </div>
+            <div class="modal-foot">
+                <button class="btn" data-close="reset-modal">Cancel</button>
+                <button class="btn btn-danger" id="reset-confirm"><i class="ph ph-trash"></i> Yes, Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/topbar.js"></script>
+</body>
+</html>

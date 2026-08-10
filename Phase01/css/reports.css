@@ -1,0 +1,15 @@
+/* reports.css - Reports page */
+
+.toolbar-spacer { flex: 1; }
+
+.reports-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 18px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+@media (max-width: 1000px) {
+  .reports-layout { grid-template-columns: 1fr; }
+}

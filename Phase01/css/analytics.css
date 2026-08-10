@@ -1,0 +1,13 @@
+/* analytics.css - Analytics page */
+
+.analytics-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+@media (max-width: 1000px) {
+  .analytics-layout { grid-template-columns: 1fr; }
+}

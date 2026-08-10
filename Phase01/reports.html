@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports</title>
+
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/reports.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <meta name="view-transition" content="same-origin">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Sidebar -->
+        <app-sidebar></app-sidebar>
+
+        <!-- Main -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <app-topbar></app-topbar>
+
+            <!-- Page Content -->
+            <div class="page-inner">
+
+                <div class="page-head">
+                    <div>
+                        <h2>Reports</h2>
+                        <p>Business performance over a date range. Everything is derived live from recorded sales.</p>
+                    </div>
+                    <div class="actions">
+                        <button class="btn" id="reports-export-btn"><i class="ph ph-download"></i> Export CSV</button>
+                    </div>
+                </div>
+
+                <!-- Date range -->
+                <div class="toolbar">
+                    <span class="toolbar-label">From</span>
+                    <input id="reports-from" type="date">
+                    <span class="toolbar-label">To</span>
+                    <input id="reports-to" type="date">
+                    <span class="toolbar-spacer"></span>
+                    <button class="btn btn-sm" id="reports-range-30">Last 30 days</button>
+                    <button class="btn btn-sm" id="reports-range-90">Last 90 days</button>
+                    <button class="btn btn-sm" id="reports-range-all">All time</button>
+                </div>
+
+                <!-- Summary KPI cards -->
+                <div class="kpi-grid" id="reports-kpis">
+                    <div class="kpi-card">
+                        <span class="kpi-label"><i class="ph ph-currency-dollar"></i> Revenue</span>
+                        <strong class="kpi-value" id="rpt-revenue">$0</strong>
+                        <small class="kpi-sub">gross sales in range</small>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label"><i class="ph ph-trend-up"></i> Profit</span>
+                        <strong class="kpi-value" id="rpt-profit">$0</strong>
+                        <small class="kpi-sub">revenue minus cost</small>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label"><i class="ph ph-receipt"></i> Orders</span>
+                        <strong class="kpi-value" id="rpt-orders">0</strong>
+                        <small class="kpi-sub">sales transactions</small>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label"><i class="ph ph-boxes"></i> Units sold</span>
+                        <strong class="kpi-value" id="rpt-units">0</strong>
+                        <small class="kpi-sub">total quantity</small>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label"><i class="ph ph-percent"></i> Avg order value</span>
+                        <strong class="kpi-value" id="rpt-avg">$0</strong>
+                        <small class="kpi-sub">revenue / orders</small>
+                    </div>
+                </div>
+
+                <div class="reports-layout">
+                    <!-- Revenue trend -->
+                    <div class="panel">
+                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 14px;">Revenue Trend</h3>
+                        <div class="chart-box" style="height: 260px;">
+                            <canvas id="chart-reports-trend"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Sales by category -->
+                    <div class="panel">
+                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 14px;">Sales by Category</h3>
+                        <div class="chart-box" style="height: 260px;">
+                            <canvas id="chart-reports-category"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reports-layout">
+                    <!-- Monthly breakdown -->
+                    <div class="panel">
+                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 12px;">Monthly Breakdown</h3>
+                        <div class="table-wrap">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Month</th>
+                                        <th class="num">Orders</th>
+                                        <th class="num">Units</th>
+                                        <th class="num">Revenue</th>
+                                        <th class="num">Profit</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rpt-monthly-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Top products -->
+                    <div class="panel">
+                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 12px;">Top Products</h3>
+                        <div class="table-wrap">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th class="num">Units</th>
+                                        <th class="num">Revenue</th>
+                                        <th class="num">Profit</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rpt-top-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/reports.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/topbar.js"></script>
+</body>
+</html>

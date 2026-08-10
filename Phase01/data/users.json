@@ -1,0 +1,23 @@
+[
+  {
+    "id": "USR-1",
+    "name": "Aman Gupta",
+    "email": "admin@stocksense.com",
+    "password": "admin123",
+    "role": "admin"
+  },
+  {
+    "id": "USR-2",
+    "name": "Priya Sharma",
+    "email": "manager@stocksense.com",
+    "password": "manager123",
+    "role": "manager"
+  },
+  {
+    "id": "USR-3",
+    "name": "Rohan Mehta",
+    "email": "user@stocksense.com",
+    "password": "user123",
+    "role": "user"
+  }
+]

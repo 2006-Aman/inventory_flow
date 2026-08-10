@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory</title>
+
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/inventory.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <meta name="view-transition" content="same-origin">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Sidebar -->
+        <app-sidebar></app-sidebar>
+
+        <!-- Main -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <app-topbar></app-topbar>
+
+            <!-- Page Content -->
+            <div class="page-inner">
+
+                <!-- Page header -->
+                <div class="page-head">
+                    <div>
+                        <h2>Inventory</h2>
+                        <p>All products live in LocalStorage. Search, filter, edit, update stock and delete - every change is saved instantly and reflected across all pages.</p>
+                    </div>
+                    <div class="actions">
+                        <button class="btn" id="export-btn"><i class="ph ph-download"></i> Export CSV</button>
+                        <a class="btn btn-gradient" href="add-product.html" style="text-decoration: none;"><i class="ph ph-plus"></i> Add Product</a>
+                    </div>
+                </div>
+
+                <!-- Toolbar: search + filters -->
+                <div class="toolbar">
+                    <div class="search-field">
+                        <i class="ph ph-magnifying-glass"></i>
+                        <input id="inv-search" type="text" placeholder="Search name, SKU or barcode...">
+                    </div>
+                    <span class="toolbar-label">Category</span>
+                    <select id="filter-category"><option value="">All Categories</option></select>
+                    <span class="toolbar-label">Supplier</span>
+                    <select id="filter-supplier"><option value="">All Suppliers</option></select>
+                    <span class="toolbar-label">Status</span>
+                    <select id="filter-status"><option value="">All Status</option></select>
+                </div>
+
+                <!-- Products table -->
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th class="sortable" data-sort="name">Product</th>
+                                <th class="sortable" data-sort="category">Category</th>
+                                <th>Supplier</th>
+                                <th class="num sortable" data-sort="costPrice">Cost</th>
+                                <th class="num sortable" data-sort="sellingPrice">Selling</th>
+                                <th class="num sortable" data-sort="stock">Stock</th>
+                                <th class="num sortable" data-sort="reorderPoint">Reorder Pt</th>
+                                <th class="sortable" data-sort="status">Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inv-tbody"></tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" id="inv-pagination"></div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- ===== Edit Product Modal ===== -->
+    <div class="modal-backdrop" id="edit-modal">
+        <div class="modal">
+            <div class="modal-head">
+                <h3>Edit Product</h3>
+                <button class="modal-close" data-close>&times;</button>
+            </div>
+            <div class="modal-body">
+                <datalist id="category-list"></datalist>
+                <div class="form-grid2">
+                    <div class="field full-width">
+                        <label>Product name</label>
+                        <input id="edit-name" type="text">
+                        <div class="field-error"></div>
+                    </div>
+                    <div class="field">
+                        <label>SKU</label>
+                        <input id="edit-sku" type="text">
+                        <div class="field-error"></div>
+                    </div>
+                    <div class="field">
+                        <label>Barcode</label>
+                        <input id="edit-barcode" type="text">
+                        <div class="field-error"></div>
+                    </div>
+                    <div class="field">
+                        <label>Category</label>
+                        <input id="edit-category" type="text" list="category-list">
+                        <div class="field-error"></div>
+                    </div>
+                    <div class="field">
+                        <label>Supplier</label>
+                        <input id="edit-supplier" type="text">
+                        <div class="field-error"></div>
+                    </div>
+                    <div class="field">
+                        <label>Cost price ($)</label>
+                        <input id="edit-cost" type="number" min="0" step="0.01">
+                        <div class="field-error"></div>
+                    </div>
+                    <div class="field">
+                        <label>Selling price ($)</label>
+                        <input id="edit-selling" type="number" min="0" step="0.01">
+                        <div class="field-error"></div>
+                    </div>
+                    <div class="field">
+                        <label>Stock</label>
+                        <input id="edit-stock" type="number" min="0">
+                        <div class="field-error"></div>
+                    </div>
+                    <div class="field">
+                        <label>Safety stock</label>
+                        <input id="edit-safety" type="number" min="0">
+                        <div class="field-error"></div>
+                    </div>
+                    <div class="field full-width">
+                        <label>Lead time (days)</label>
+                        <input id="edit-lead" type="number" min="1">
+                        <div class="field-error"></div>
+                    </div>
+                    <div class="field full-width">
+                        <label>Description</label>
+                        <textarea id="edit-description"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn" data-close>Cancel</button>
+                <button class="btn btn-gradient" id="edit-save"><i class="ph ph-check"></i> Save changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Update Stock Modal ===== -->
+    <div class="modal-backdrop" id="stock-modal">
+        <div class="modal modal-sm">
+            <div class="modal-head">
+                <h3>Update Stock</h3>
+                <button class="modal-close" data-close>&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="stock-product-name" style="margin-bottom: 14px; font-size: 13px; color: var(--text-muted);"></p>
+                <div class="field">
+                    <label>New stock quantity</label>
+                    <input id="stock-new-value" type="number" min="0">
+                    <div class="field-error"></div>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn" data-close>Cancel</button>
+                <button class="btn btn-gradient" id="stock-save"><i class="ph ph-check"></i> Update stock</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/inventory.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/topbar.js"></script>
+</body>
+</html>

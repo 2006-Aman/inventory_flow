@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reorder Management</title>
+
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/reorder.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <meta name="view-transition" content="same-origin">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Sidebar -->
+        <app-sidebar></app-sidebar>
+
+        <!-- Main -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <app-topbar></app-topbar>
+
+            <!-- Page Content -->
+            <div class="page-inner">
+
+                <div class="page-head">
+                    <div>
+                        <p>Reorder point = (lead time &times; average daily demand) + safety stock. Products at or below their reorder point need attention.</p>
+                    </div>
+                    <div class="actions">
+                        <button class="btn" id="reorder-export-btn"><i class="ph ph-download"></i> Export CSV</button>
+                        <a class="btn btn-gradient" href="forecast.html" style="text-decoration: none;"><i class="ph ph-trend-up"></i> Forecast</a>
+                    </div>
+                </div>
+
+                <!-- Alert cards -->
+                <div class="kpi-grid" id="reorder-kpis">
+                    <div class="kpi-card">
+                        <span class="kpi-label"><i class="ph ph-check-circle"></i> Safe stock</span>
+                        <strong class="kpi-value" id="kpi-safe">0</strong>
+                        <small class="kpi-sub">above reorder point</small>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label"><i class="ph ph-warning"></i> Low stock</span>
+                        <strong class="kpi-value" id="kpi-low">0</strong>
+                        <small class="kpi-sub">low but not critical</small>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label"><i class="ph ph-alarm"></i> Critical</span>
+                        <strong class="kpi-value" id="kpi-critical">0</strong>
+                        <small class="kpi-sub">at or below reorder point</small>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label"><i class="ph ph-x-circle"></i> Out of stock</span>
+                        <strong class="kpi-value" id="kpi-out">0</strong>
+                        <small class="kpi-sub">unavailable right now</small>
+                    </div>
+                </div>
+
+                <!-- Reorder table -->
+                <div class="panel" style="padding: 20px 24px;">
+                    <h3 style="font-size: 16px; color: #fff; margin-bottom: 12px;">Products Needing Reorder</h3>
+                    <div class="table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="num">Current Stock</th>
+                                    <th class="num">Reorder Point</th>
+                                    <th class="num">Avg Daily Demand</th>
+                                    <th class="num">Lead Time</th>
+                                    <th class="num">Safety Stock</th>
+                                    <th class="num">Recommended Order</th>
+                                    <th>Status</th>
+                                    <th class="actions-col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reorder-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Restock modal -->
+    <div class="modal-backdrop" id="restock-modal">
+        <div class="modal" style="max-width: 440px;">
+            <div class="modal-head">
+                <h3>Restock Product</h3>
+                <button class="icon-action" data-close="restock-modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="restock-product-info" style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;"></p>
+                <div class="field">
+                    <label>Quantity to add</label>
+                    <input id="restock-quantity" type="number" min="1" value="0">
+                    <div class="field-error"></div>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn" data-close="restock-modal">Cancel</button>
+                <button class="btn btn-gradient" id="restock-save"><i class="ph ph-check"></i> Add Stock</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/reorder.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/topbar.js"></script>
+</body>
+</html>

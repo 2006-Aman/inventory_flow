@@ -1,0 +1,15 @@
+/* reorder.css - Reorder management page */
+
+.actions-col { width: 90px; text-align: right; }
+
+.reorder-item {
+  font-size: 12px;
+  color: #ef4444;
+  font-family: var(--font-mono);
+}
+
+.restock-qty {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}

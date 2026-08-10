@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <meta name="view-transition" content="same-origin">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- ===================== Sidebar ===================== -->
+        <app-sidebar></app-sidebar>
+
+        <!-- ===================== Main ===================== -->
+        <main class="main-content">
+            <!-- Global Topbar (Search/Profile) -->
+            <app-topbar></app-topbar>
+
+            <!-- Page Content Wrapper -->
+            <div class="page-inner no-top-pad">
+
+                <!-- Dashboard Page Header -->
+                <div class="topbar" style="padding: 22px 0 0;">
+                    <p style="color: var(--text-faint); font-size: 13px; margin: 0; max-width: 600px;">Every KPI below is derived live from your sales history using the forecasting engine you selected.</p>
+                  <div class="actions">
+                    <a class="btn btn-gradient" href="sales.html" style="text-decoration: none;">Record a sale</a>
+                    <a class="btn" href="forecast.html" style="text-decoration: none;">Open forecast</a>
+                  </div>
+                </div>
+
+                <!-- 1. Stat Cards -->
+                <div class="stat-grid">
+                  <div class="stat-card premium-kpi">
+                    <div class="kpi-top">
+                      <div class="kpi-icon-glow" style="--kpi-color: 59, 130, 246;"><i class="ph ph-cube"></i></div>
+                      <div class="kpi-titles">
+                        <div class="stat-label">Total Products</div>
+                        <div class="stat-value" id="stat-total-products">-</div>
+                      </div>
+                    </div>
+                    <div class="kpi-bottom">
+                      <div class="stat-delta" id="delta-total-products"></div>
+                      <div class="kpi-sparkline"><canvas id="sparkline-total-products"></canvas></div>
+                    </div>
+                  </div>
+                  <div class="stat-card premium-kpi">
+                    <div class="kpi-top">
+                      <div class="kpi-icon-glow" style="--kpi-color: 52, 211, 153;"><i class="ph ph-currency-dollar"></i></div>
+                      <div class="kpi-titles">
+                        <div class="stat-label">Inventory Value</div>
+                        <div class="stat-value" id="stat-inventory-value">-</div>
+                      </div>
+                    </div>
+                    <div class="kpi-bottom">
+                      <div class="stat-delta" id="delta-inventory-value"></div>
+                      <div class="kpi-sparkline"><canvas id="sparkline-inventory-value"></canvas></div>
+                    </div>
+                  </div>
+                  <div class="stat-card premium-kpi">
+                    <div class="kpi-top">
+                      <div class="kpi-icon-glow" style="--kpi-color: 167, 139, 250;"><i class="ph ph-chart-bar"></i></div>
+                      <div class="kpi-titles">
+                        <div class="stat-label">Today's Sales</div>
+                        <div class="stat-value" id="stat-todays-sales">-</div>
+                      </div>
+                    </div>
+                    <div class="kpi-bottom">
+                      <div class="stat-delta" id="delta-todays-sales"></div>
+                      <div class="kpi-sparkline"><canvas id="sparkline-todays-sales"></canvas></div>
+                    </div>
+                  </div>
+                  <div class="stat-card premium-kpi">
+                    <div class="kpi-top">
+                      <div class="kpi-icon-glow" style="--kpi-color: 245, 158, 11;"><i class="ph ph-trend-up"></i></div>
+                      <div class="kpi-titles">
+                        <div class="stat-label">30-Day Revenue</div>
+                        <div class="stat-value" id="stat-thirty-day-revenue">-</div>
+                      </div>
+                    </div>
+                    <div class="kpi-bottom">
+                      <div class="stat-delta" id="delta-thirty-day-revenue"></div>
+                      <div class="kpi-sparkline"><canvas id="sparkline-thirty-day-revenue"></canvas></div>
+                    </div>
+                  </div>
+                  <div class="stat-card premium-kpi">
+                    <div class="kpi-top">
+                      <div class="kpi-icon-glow" style="--kpi-color: 16, 185, 129;"><i class="ph ph-money"></i></div>
+                      <div class="kpi-titles">
+                        <div class="stat-label">30-Day Profit</div>
+                        <div class="stat-value" id="stat-thirty-day-profit">-</div>
+                      </div>
+                    </div>
+                    <div class="kpi-bottom">
+                      <div class="stat-delta" id="delta-thirty-day-profit"></div>
+                      <div class="kpi-sparkline"><canvas id="sparkline-thirty-day-profit"></canvas></div>
+                    </div>
+                  </div>
+                  <div class="stat-card premium-kpi">
+                    <div class="kpi-top">
+                      <div class="kpi-icon-glow" style="--kpi-color: 59, 130, 246;"><i class="ph ph-activity"></i></div>
+                      <div class="kpi-titles">
+                        <div class="stat-label">Avg Daily Demand</div>
+                        <div class="stat-value" id="stat-avg-daily-demand">-</div>
+                      </div>
+                    </div>
+                    <div class="kpi-bottom">
+                      <div class="stat-delta" id="delta-avg-daily-demand"></div>
+                      <div class="kpi-sparkline"><canvas id="sparkline-avg-daily-demand"></canvas></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 1b. More KPI Stat Cards -->
+                <div class="stat-grid">
+                  <div class="stat-card premium-kpi">
+                    <div class="kpi-top">
+                      <div class="kpi-icon-glow" style="--kpi-color: 167, 139, 250;"><i class="ph ph-shopping-bag"></i></div>
+                      <div class="kpi-titles">
+                        <div class="stat-label">Orders Logged</div>
+                        <div class="stat-value" id="stat-orders-logged">-</div>
+                      </div>
+                    </div>
+                    <div class="kpi-bottom">
+                      <div class="stat-delta" id="delta-orders-logged"></div>
+                      <div class="kpi-sparkline"><canvas id="sparkline-orders-logged"></canvas></div>
+                    </div>
+                  </div>
+                  <div class="stat-card premium-kpi">
+                    <div class="kpi-top">
+                      <div class="kpi-icon-glow" style="--kpi-color: 16, 185, 129;"><i class="ph ph-target"></i></div>
+                      <div class="kpi-titles">
+                        <div class="stat-label">Forecast Accuracy</div>
+                        <div class="stat-value" id="stat-forecast-accuracy">-</div>
+                      </div>
+                    </div>
+                    <div class="kpi-bottom">
+                      <div class="stat-delta" id="delta-forecast-accuracy"></div>
+                      <div class="kpi-sparkline"><canvas id="sparkline-forecast-accuracy"></canvas></div>
+                    </div>
+                  </div>
+                  <div class="stat-card premium-kpi">
+                    <div class="kpi-top">
+                      <div class="kpi-icon-glow" style="--kpi-color: 245, 158, 11;"><i class="ph ph-warning"></i></div>
+                      <div class="kpi-titles">
+                        <div class="stat-label">Items Running Low</div>
+                        <div class="stat-value" id="stat-items-running-low">-</div>
+                      </div>
+                    </div>
+                    <div class="kpi-bottom">
+                      <div class="stat-delta" id="delta-items-running-low"></div>
+                      <div class="kpi-sparkline"><canvas id="sparkline-items-running-low"></canvas></div>
+                    </div>
+                  </div>
+                  <div class="stat-card premium-kpi">
+                    <div class="kpi-top">
+                      <div class="kpi-icon-glow" style="--kpi-color: 239, 68, 68;"><i class="ph ph-x-circle"></i></div>
+                      <div class="kpi-titles">
+                        <div class="stat-label">Out Of Stock</div>
+                        <div class="stat-value" id="stat-out-of-stock">-</div>
+                      </div>
+                    </div>
+                    <div class="kpi-bottom">
+                      <div class="stat-delta" id="delta-out-of-stock"></div>
+                      <div class="kpi-sparkline"><canvas id="sparkline-out-of-stock"></canvas></div>
+                    </div>
+                  </div>
+                  <div class="stat-card premium-kpi">
+                    <div class="kpi-top">
+                      <div class="kpi-icon-glow" style="--kpi-color: 242, 153, 74;"><i class="ph ph-bell"></i></div>
+                      <div class="kpi-titles">
+                        <div class="stat-label">Upcoming Reorders</div>
+                        <div class="stat-value" id="stat-upcoming-reorders">-</div>
+                      </div>
+                    </div>
+                    <div class="kpi-bottom">
+                      <div class="stat-delta" id="delta-upcoming-reorders"></div>
+                      <div class="kpi-sparkline"><canvas id="sparkline-upcoming-reorders"></canvas></div>
+                    </div>
+                  </div>
+                  <div class="stat-card premium-kpi">
+                    <div class="kpi-top">
+                      <div class="kpi-icon-glow" style="--kpi-color: 34, 197, 94;"><i class="ph ph-heartbeat"></i></div>
+                      <div class="kpi-titles">
+                        <div class="stat-label">Business Health</div>
+                        <div class="stat-value" id="stat-business-health">-</div>
+                      </div>
+                    </div>
+                    <div class="kpi-bottom">
+                      <div class="stat-delta" id="delta-business-health"></div>
+                      <div class="kpi-sparkline"><canvas id="sparkline-business-health"></canvas></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 2. Top Charts Grid (3 cols) -->
+                <div class="charts-grid-3 top-charts-grid">
+                  <div class="chart-panel">
+                    <div class="chart-panel-header">
+                      <h2>Revenue & Demand Trend</h2>
+                      <select class="chart-filter-btn" data-target="salesTrend">
+                        <option value="30">Last 30 days</option>
+                        <option value="this_month">This Month</option>
+                        <option value="all">All Time</option>
+                      </select>
+                    </div>
+                    <div id="revenue-legend" class="chart-legend-row" style="justify-content: flex-start; margin-top: -4px; margin-bottom: 12px; border: none; padding: 0;"></div>
+                    <div class="chart-canvas-wrap">
+                      <canvas id="chart-revenue-trend"></canvas>
+                    </div>
+                  </div>
+                  
+                  <!-- Top Selling Products -->
+                  <div class="chart-panel">
+                    <div class="chart-panel-header">
+                      <h2>Top Selling Products</h2>
+                      <select class="chart-filter-btn" data-target="topSelling">
+                        <option value="30">Last 30 days</option>
+                        <option value="this_month">This Month</option>
+                        <option value="all">All Time</option>
+                      </select>
+                    </div>
+                    <div class="chart-canvas-wrap" style="height: 260px; margin-top: 10px;">
+                      <canvas id="chart-top-selling"></canvas>
+                    </div>
+                  </div>
+
+                  <!-- Inventory Status -->
+                  <div class="chart-panel" style="display: flex; flex-direction: column; padding: 0;">
+                    <div class="chart-panel-header" style="padding: 18px 20px 0; border-bottom: none;">
+                      <h2>Inventory Status</h2>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 10px 20px 0;">
+                      <div style="position: relative; width: 260px; height: 130px; margin-top: 10px;">
+                        <!-- Gauge Canvas -->
+                        <canvas id="chart-inventory-status"></canvas>
+                        
+                        <!-- Center Text -->
+                        <div style="position: absolute; bottom: 0; left: 0; right: 0; text-align: center; display: flex; flex-direction: column; align-items: center;">
+                          <div id="inv-gauge-value" style="font-size: 36px; font-weight: 600; color: var(--text); line-height: 1; margin-bottom: 4px;">-</div>
+                          <div style="font-size: 11px; color: var(--text-faint);">Overall Stock Health</div>
+                          <div id="inv-gauge-label" style="margin-top: 8px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #10b981; padding: 2px 14px; border-radius: 12px; font-size: 11px; font-weight: 500;">Good</div>
+                        </div>
+                        
+                        <!-- 0% 50% 100% Labels -->
+                        <div style="position: absolute; left: 10px; bottom: -20px; font-size: 11px; color: var(--text-faint); font-weight: 600;">0%</div>
+                        <div style="position: absolute; left: 50%; top: -20px; transform: translateX(-50%); font-size: 11px; color: var(--text-faint); font-weight: 600;">50%</div>
+                        <div style="position: absolute; right: 10px; bottom: -20px; font-size: 11px; color: var(--text-faint); font-weight: 600;">100%</div>
+                      </div>
+                    </div>
+                    
+                    <!-- Stats Bottom -->
+                    <div style="display: flex; justify-content: space-between; padding: 14px 16px; margin: 36px 16px 16px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-soft); border-radius: 8px;">
+                      <div style="text-align: center; flex: 1; border-right: 1px solid var(--border-soft);">
+                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">In Stock</div>
+                        <div id="inv-in-stock" style="font-size: 15px; font-weight: 600; color: rgba(16, 185, 129, 0.9);">0</div>
+                      </div>
+                      <div style="text-align: center; flex: 1; border-right: 1px solid var(--border-soft);">
+                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">Low Stock</div>
+                        <div id="inv-low-stock" style="font-size: 15px; font-weight: 600; color: rgba(245, 158, 11, 0.9);">0</div>
+                      </div>
+                      <div style="text-align: center; flex: 1;">
+                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">Out of Stock</div>
+                        <div id="inv-out-of-stock" style="font-size: 15px; font-weight: 600; color: rgba(239, 68, 68, 0.9);">0</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 3. Middle Grid (3 cols) -->
+                <div class="charts-grid-3 middle-charts-grid">
+                  <div class="chart-panel" style="display: flex; flex-direction: column;">
+                    <div class="chart-panel-header">
+                      <h2 style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+                        Sales by Category
+                        <select class="chart-filter-btn" data-target="salesByCategory" style="padding: 4px 10px; font-size: 11px; cursor: pointer;">
+                          <option value="30">Last 30 days</option>
+                          <option value="this_month">This Month</option>
+                          <option value="all">All Time</option>
+                        </select>
+                      </h2>
+                    </div>
+                    <div class="bubble-chart-wrap" id="bubble-chart-wrap">
+                      <!-- Bubbles injected by JS -->
+                    </div>
+                    <div class="bubble-chart-summary">
+                      <div class="bubble-summary-left">
+                        <div class="bubble-icon"><i class="ph-fill ph-lock-key"></i></div>
+                        <div class="bubble-summary-text">
+                          <span class="bubble-summary-label">Total Sales</span>
+                          <span class="bubble-summary-value" id="bubble-total-value">-</span>
+                        </div>
+                      </div>
+                      <div class="bubble-summary-right">
+                        <i class="ph ph-star"></i> <span id="bubble-total-categories">0</span> Categories
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="chart-panel" style="display: flex; flex-direction: column;">
+                    <div class="chart-panel-header">
+                      <h2>Demand Forecast vs Actual Sales</h2>
+                      <select class="chart-filter-btn" data-target="forecastActual">
+                        <option value="30">Last 30 days</option>
+                        <option value="this_month">This Month</option>
+                        <option value="all">All Time</option>
+                      </select>
+                    </div>
+                    <div id="forecast-legend" class="chart-legend-row" style="justify-content: flex-start; margin-top: -4px; margin-bottom: 12px; border: none; padding: 0;"></div>
+                    <div class="chart-canvas-wrap" style="flex: 1;">
+                      <canvas id="chart-forecast-actual"></canvas>
+                    </div>
+                  </div>
+
+                  <!-- Recent Sales Activity Timeline -->
+                  <div class="chart-panel" style="display: flex; flex-direction: column; padding: 0;">
+                    <div class="chart-panel-header" style="padding: 18px 20px 0; border-bottom: none;">
+                      <h2>Recent Sales Activity</h2>
+                    </div>
+                    <div style="flex: 1; padding: 12px 20px 10px;">
+                      <div class="timeline-container" id="recent-sales-timeline"></div>
+                    </div>
+                    <div style="text-align: center; padding: 18px; border-top: 1px solid var(--border-soft);">
+                      <a href="sales-history.html" class="view-all-link">View all sales <i class="ph ph-arrow-right"></i></a>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 3.5 Monthly Sales Chart -->
+                <div class="charts-grid" style="grid-template-columns: 1fr;">
+                  <div class="chart-panel">
+                    <div class="chart-panel-header">
+                      <h2>Monthly Sales</h2>
+                      <span class="chart-sub">last 6 months &middot; revenue</span>
+                    </div>
+                    <div class="chart-canvas-wrap" style="height: 220px;">
+                      <canvas id="chart-monthly-sales"></canvas>
+                    </div>
+                  </div>
+                </div>
+
+                                <!-- 4. Bottom Grid (2 cols) -->
+                <div class="charts-grid" style="grid-template-columns: 2fr 1fr;">
+                  <!-- Reorder Alerts -->
+                  <div class="chart-panel" style="padding: 0; display: flex; flex-direction: column;">
+                    <div class="chart-panel-header" style="padding: 18px 20px 0; border-bottom: none;">
+                      <h2>Low Stock Products</h2>
+                    </div>
+                    <div class="pulse-table-wrap" style="margin-top: 10px; border: none; background: transparent; padding: 0;">
+                      <table class="pulse-table" style="width: 100%;">
+                        <thead>
+                          <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th style="text-align: center;">Current Stock</th>
+                            <th style="text-align: center;">Reorder Point</th>
+                            <th style="text-align: center;">Units Required</th>
+                            <th style="text-align: center;">Expected Stockout</th>
+                            <th style="text-align: center;">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody id="low-stock-tbody"></tbody>
+                      </table>
+                    </div>
+                    <div style="text-align: center; padding: 18px; border-top: 1px solid var(--border-soft);">
+                      <a href="reorder.html" style="color: #3b82f6; text-decoration: none; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px;">View all low stock products <i class="ph ph-arrow-right"></i></a>
+                    </div>
+                  </div>
+
+                  <!-- Stock Value by Category -->
+                  <div class="chart-panel stock-panel">
+                    <div class="chart-panel-header">
+                      <h2 style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+                        Stock Value by Category
+                        <select class="chart-filter-btn" data-target="stockValue" style="padding: 4px 10px; font-size: 11px; cursor: pointer;">
+                          <option value="30">Last 30 days</option>
+                          <option value="this_month">This Month</option>
+                          <option value="all">All Time</option>
+                        </select>
+                      </h2>
+                    </div>
+                    <div class="stock-canvas-wrap">
+                      <canvas id="chart-stock-value"></canvas>
+                    </div>
+                    
+                    <div class="stock-summary-grid">
+                      <div class="stock-card">
+                        <div class="stock-icon blue-icon">
+                          <i class="ph ph-package"></i>
+                        </div>
+                        <div class="stock-details">
+                          <span class="stock-label">Total Stock Value</span>
+                          <span class="stock-value" id="stock-val-total">$0</span>
+                        </div>
+                      </div>
+                      <div class="stock-card">
+                        <div class="stock-icon purple-icon">
+                          <i class="ph ph-squares-four"></i>
+                        </div>
+                        <div class="stock-details">
+                          <span class="stock-label">Total Categories</span>
+                          <span class="stock-value" id="stock-val-cats">0</span>
+                        </div>
+                      </div>
+                      <div class="stock-card">
+                        <div class="stock-icon green-icon">
+                          <i class="ph ph-book-open"></i>
+                        </div>
+                        <div class="stock-details">
+                          <span class="stock-label">Average per Category</span>
+                          <span class="stock-value" id="stock-val-avg">$0</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                
+                <!-- Footer -->
+                <footer style="margin-top: 40px; text-align: center; color: var(--text-faint); font-family: var(--font-mono); font-size: 12px; padding-bottom: 20px;">
+                    <p>StockSense v2.0 &middot; Inventory Intelligence</p>
+                </footer>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/topbar.js"></script>
+</body>
+</html>

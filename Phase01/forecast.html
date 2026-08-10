@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demand Forecast</title>
+
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/forecast.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <meta name="view-transition" content="same-origin">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Sidebar -->
+        <app-sidebar></app-sidebar>
+
+        <!-- Main -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <app-topbar></app-topbar>
+
+            <!-- Page Content -->
+            <div class="page-inner">
+
+                <div class="page-head">
+                    <div>
+                        <h2>Demand Forecast</h2>
+                        <p>7-day moving average demand per product, projected forward, compared against actual sales.</p>
+                    </div>
+                    <div class="actions">
+                        <button class="btn" id="forecast-export-btn"><i class="ph ph-download"></i> Export CSV</button>
+                        <a class="btn btn-gradient" href="reorder.html" style="text-decoration: none;"><i class="ph ph-package"></i> Reorder</a>
+                    </div>
+                </div>
+
+                <!-- Forecast KPI cards -->
+                <div class="kpi-grid" id="forecast-kpis">
+                    <div class="kpi-card">
+                        <span class="kpi-label"><i class="ph ph-trend-up"></i> Next 7 days demand</span>
+                        <strong class="kpi-value" id="kpi-demand-7">0</strong>
+                        <small class="kpi-sub" id="kpi-demand-7-sub">units projected</small>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label"><i class="ph ph-calendar-blank"></i> Next 30 days demand</span>
+                        <strong class="kpi-value" id="kpi-demand-30">0</strong>
+                        <small class="kpi-sub" id="kpi-demand-30-sub">units projected</small>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label"><i class="ph ph-target"></i> Forecast accuracy</span>
+                        <strong class="kpi-value" id="kpi-accuracy">-</strong>
+                        <small class="kpi-sub" id="kpi-accuracy-sub">7-day forecast vs actual</small>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label"><i class="ph ph-warning-circle"></i> Need reorder</span>
+                        <strong class="kpi-value" id="kpi-need-reorder">0</strong>
+                        <small class="kpi-sub" id="kpi-need-reorder-sub">products below reorder point</small>
+                    </div>
+                </div>
+
+                <div class="forecast-layout">
+                    <!-- Main chart -->
+                    <div class="panel">
+                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 6px;">Forecast vs Actual</h3>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Actual sales per day vs the 7-day moving average forecast (last 14 days).</p>
+                        <div class="chart-box" style="height: 300px;">
+                            <canvas id="chart-forecast"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Top forecast products -->
+                    <div class="panel">
+                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 6px;">Top Forecasted Products</h3>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Highest projected demand for the next 7 days.</p>
+                        <div id="top-forecast-list" class="forecast-rank-list"></div>
+                    </div>
+                </div>
+
+                <!-- Forecast table -->
+                <div class="panel" style="padding: 20px 24px;">
+                    <h3 style="font-size: 16px; color: #fff; margin-bottom: 12px;">Product Forecast Detail</h3>
+                    <div class="table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="num">Avg Daily Demand</th>
+                                    <th class="num">Forecast (7d)</th>
+                                    <th class="num">Forecast (30d)</th>
+                                    <th class="num">Current Stock</th>
+                                    <th class="num">Reorder Point</th>
+                                    <th class="num">Days Until Stockout</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="forecast-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/forecast.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/topbar.js"></script>
+</body>
+</html>
