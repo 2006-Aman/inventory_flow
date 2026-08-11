@@ -19,32 +19,51 @@ const DB_KEYS = {
 const DEMAND_DAYS = 90;
 
 // ------------------------------------------------------------------
-// Initialisation
+// In-memory cache & Initialisation
 // ------------------------------------------------------------------
 
+const _memCache = {
+  products: null,
+  sales: null,
+  categories: null,
+  users: null
+};
+
+function clearMemCache() {
+  _memCache.products = null;
+  _memCache.sales = null;
+  _memCache.categories = null;
+  _memCache.users = null;
+}
+
+let _initPromise = null;
+
 // Seed LocalStorage from the JSON files (only the first time the app runs).
-// Returns a Promise. Safe to call on every page load - it does nothing
-// if the data is already stored.
-async function initializeDatabase() {
-  const missing = [];
-  for (const key of Object.values(DB_KEYS)) {
-    const val = localStorage.getItem(key);
-    if (val === null || (key === DB_KEYS.sales && (val === '[]' || !JSON.parse(val || '[]').length))) {
-      missing.push(key);
-    }
-  }
+// Returns a Promise. Safe to call on every page load - reuses in-flight or completed Promise.
+function initializeDatabase() {
+  if (_initPromise) return _initPromise;
 
-  if (missing.length > 0) {
-    for (const key of missing) {
-      await loadJSON(key, true);
+  _initPromise = (async function () {
+    const missing = [];
+    for (const key of Object.values(DB_KEYS)) {
+      const val = localStorage.getItem(key);
+      if (val === null || (key === DB_KEYS.sales && (val === '[]' || !JSON.parse(val || '[]').length))) {
+        missing.push(key);
+      }
     }
-    // Keep the demo alive: shift sale dates so the newest sale is "today"
-    shiftSalesDatesToToday();
-  }
 
-  // Always keep the computed fields (demand, reorder point, status) fresh
-  recalculateProductMetrics();
-  return true;
+    if (missing.length > 0) {
+      for (const key of missing) {
+        await loadJSON(key, true);
+      }
+      shiftSalesDatesToToday();
+    }
+
+    recalculateProductMetrics();
+    return true;
+  })();
+
+  return _initPromise;
 }
 
 // Load a single JSON file into LocalStorage.
@@ -53,11 +72,22 @@ async function initializeDatabase() {
 async function loadJSON(key, forceReload = false) {
   if (!forceReload && localStorage.getItem(key) !== null && localStorage.getItem(key) !== '[]') return;
 
+  // Fast path: if SEED_DATA is already present in window, use it synchronously
+  if (typeof window.SEED_DATA !== 'undefined' && window.SEED_DATA[key]) {
+    const seedVal = window.SEED_DATA[key];
+    if (Array.isArray(seedVal) && seedVal.length > 0) {
+      localStorage.setItem(key, JSON.stringify(seedVal));
+      _memCache[key] = seedVal;
+      return;
+    }
+  }
+
   try {
     const response = await fetch('data/' + key + '.json?nocache=' + new Date().getTime());
     if (!response.ok) throw new Error('HTTP ' + response.status);
     const data = await response.json();
     localStorage.setItem(key, JSON.stringify(data));
+    _memCache[key] = data;
   } catch (error) {
     await loadSeedFallback(forceReload);
   }
@@ -75,6 +105,7 @@ function loadSeedFallback(forceReload = false) {
             const seedVal = window.SEED_DATA[key];
             if (Array.isArray(seedVal) && seedVal.length > 0) {
               localStorage.setItem(key, JSON.stringify(seedVal));
+              _memCache[key] = seedVal;
             }
           }
         }
@@ -96,38 +127,50 @@ function loadSeedFallback(forceReload = false) {
 }
 
 // ------------------------------------------------------------------
-// Simple getters / setters
+// Simple getters / setters (with fast in-memory caching)
 // ------------------------------------------------------------------
 
 function getProducts() {
-  return JSON.parse(localStorage.getItem(DB_KEYS.products) || '[]');
+  if (_memCache.products !== null) return _memCache.products;
+  _memCache.products = JSON.parse(localStorage.getItem(DB_KEYS.products) || '[]');
+  return _memCache.products;
 }
 
 function saveProducts(products) {
+  _memCache.products = products;
   localStorage.setItem(DB_KEYS.products, JSON.stringify(products));
 }
 
 function getSales() {
-  return JSON.parse(localStorage.getItem(DB_KEYS.sales) || '[]');
+  if (_memCache.sales !== null) return _memCache.sales;
+  _memCache.sales = JSON.parse(localStorage.getItem(DB_KEYS.sales) || '[]');
+  return _memCache.sales;
 }
 
 function saveSales(sales) {
+  _memCache.sales = sales;
   localStorage.setItem(DB_KEYS.sales, JSON.stringify(sales));
 }
 
 function getCategories() {
-  return JSON.parse(localStorage.getItem(DB_KEYS.categories) || '[]');
+  if (_memCache.categories !== null) return _memCache.categories;
+  _memCache.categories = JSON.parse(localStorage.getItem(DB_KEYS.categories) || '[]');
+  return _memCache.categories;
 }
 
 function saveCategories(categories) {
+  _memCache.categories = categories;
   localStorage.setItem(DB_KEYS.categories, JSON.stringify(categories));
 }
 
 function getUsers() {
-  return JSON.parse(localStorage.getItem(DB_KEYS.users) || '[]');
+  if (_memCache.users !== null) return _memCache.users;
+  _memCache.users = JSON.parse(localStorage.getItem(DB_KEYS.users) || '[]');
+  return _memCache.users;
 }
 
 function saveUsers(users) {
+  _memCache.users = users;
   localStorage.setItem(DB_KEYS.users, JSON.stringify(users));
 }
 
@@ -247,6 +290,8 @@ function addSale(saleData) {
 
 // Clear every LocalStorage key, then re-seed from the JSON files.
 async function resetDatabase() {
+  clearMemCache();
+  _initPromise = null;
   localStorage.removeItem(DB_KEYS.products);
   localStorage.removeItem(DB_KEYS.sales);
   localStorage.removeItem(DB_KEYS.categories);
@@ -257,18 +302,20 @@ async function resetDatabase() {
 
 // Replace all data with imported JSON. Returns an array of errors (empty = ok).
 function importDatabase(data) {
+  clearMemCache();
+  _initPromise = null;
   const errors = [];
   if (!data || typeof data !== 'object') {
     errors.push('The file does not contain valid JSON.');
     return errors;
   }
-  if (Array.isArray(data.products)) localStorage.setItem(DB_KEYS.products, JSON.stringify(data.products));
+  if (Array.isArray(data.products)) saveProducts(data.products);
   else errors.push('Missing "products" array.');
-  if (Array.isArray(data.sales)) localStorage.setItem(DB_KEYS.sales, JSON.stringify(data.sales));
+  if (Array.isArray(data.sales)) saveSales(data.sales);
   else errors.push('Missing "sales" array.');
-  if (Array.isArray(data.categories)) localStorage.setItem(DB_KEYS.categories, JSON.stringify(data.categories));
+  if (Array.isArray(data.categories)) saveCategories(data.categories);
   else errors.push('Missing "categories" array.');
-  if (Array.isArray(data.users)) localStorage.setItem(DB_KEYS.users, JSON.stringify(data.users));
+  if (Array.isArray(data.users)) saveUsers(data.users);
   else errors.push('Missing "users" array.');
 
   if (errors.length === 0) {
@@ -308,24 +355,31 @@ function shiftSalesDatesToToday() {
 
 // Recalculate averageDailyDemand, reorderPoint, forecastDemand and status
 // for every product, based on the sales in LocalStorage.
-// Reorder Point = Lead Time x Average Daily Demand + Safety Stock
+// Fast single pass O(S + P) instead of nested loops O(P * S).
 function recalculateProductMetrics() {
   const products = getProducts();
   const sales = getSales();
   if (!products.length) return;
 
-  const cutoff = parseDate(daysAgoKey(DEMAND_DAYS));
+  const cutoffMs = parseDate(daysAgoKey(DEMAND_DAYS)).getTime();
+
+  // Aggregate units sold per product in a single O(S) pass
+  const salesUnitsMap = {};
+  for (let i = 0; i < sales.length; i++) {
+    const sale = sales[i];
+    const saleDateMs = parseDate(sale.date).getTime();
+    if (saleDateMs >= cutoffMs) {
+      const pid = String(sale.productId);
+      salesUnitsMap[pid] = (salesUnitsMap[pid] || 0) + Number(sale.quantity || 0);
+    }
+  }
+
   let changed = false;
 
-  for (const product of products) {
-    // Units sold for this product over the last DEMAND_DAYS days
-    let unitsSold = 0;
-    for (const sale of sales) {
-      if (String(sale.productId) !== String(product.id)) continue;
-      const saleDate = parseDate(sale.date);
-      if (saleDate < cutoff) continue;
-      unitsSold += Number(sale.quantity);
-    }
+  for (let i = 0; i < products.length; i++) {
+    const product = products[i];
+    const pid = String(product.id);
+    const unitsSold = salesUnitsMap[pid] || 0;
 
     const averageDailyDemand = Math.round((unitsSold / DEMAND_DAYS) * 10) / 10;
     const leadTime = Number(product.leadTime) || 0;

@@ -17,19 +17,27 @@ function formatNumber(number) {
 
 // Convert a stored date string like "2026-08-10 14:32" into a Date object.
 // We parse it manually so it works the same in every browser.
+const _dateTsCache = {};
 function parseDate(dateString) {
   if (dateString instanceof Date) return dateString;
-  const parts = String(dateString || '').split(' ');
+  const str = String(dateString || '');
+  if (!str) return new Date(0);
+  if (_dateTsCache[str] !== undefined) {
+    return new Date(_dateTsCache[str]);
+  }
+  const parts = str.split(' ');
   const datePart = (parts[0] || '').split('-');   // [year, month, day]
   const timePart = (parts[1] || '00:00').split(':'); // [hour, minute]
-  return new Date(
-    Number(datePart[0]),
-    Number(datePart[1]) - 1,
-    Number(datePart[2]),
-    Number(timePart[0]),
-    Number(timePart[1]),
+  const d = new Date(
+    Number(datePart[0]) || 1970,
+    (Number(datePart[1]) || 1) - 1,
+    Number(datePart[2]) || 1,
+    Number(timePart[0]) || 0,
+    Number(timePart[1]) || 0,
     Number(timePart[2] || 0)
   );
+  _dateTsCache[str] = d.getTime();
+  return d;
 }
 
 // Short month names for labels
