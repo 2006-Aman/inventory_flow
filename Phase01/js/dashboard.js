@@ -12,7 +12,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupChartFilters();
 });
 
+function getActiveThemeIsLight() {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'light') return true;
+  if (savedTheme === 'dark') return false;
+  return document.body.classList.contains('theme-light');
+}
+
 function renderDashboard() {
+  const isLight = getActiveThemeIsLight();
+  document.body.classList.toggle('theme-light', isLight);
+
   const products = getProducts();
   const sales = getSales();
 
@@ -561,36 +571,44 @@ function renderSalesByCategory(products, sales30, totalRevenue) {
   }
 
   const entries = Object.entries(byCategory).sort(function (a, b) { return b[1] - a[1]; });
-  
-  // Update totals at the bottom
+  const sumRevenue = entries.reduce(function (sum, item) { return sum + item[1]; }, 0);
+  const displayTotal = sumRevenue || totalRevenue || 0;
+
+  // Update totals at the bottom summary bar
   const totalEl = document.getElementById('bubble-total-value');
-  if (totalEl) totalEl.textContent = formatCurrency(totalRevenue);
+  if (totalEl) totalEl.textContent = formatCurrency(displayTotal);
   
   const catCountEl = document.getElementById('bubble-total-categories');
   if (catCountEl) catCountEl.textContent = entries.length;
 
-  const gradients = [
-    'radial-gradient(circle at 30% 30%, #3b82f6, #1e3a8a)', // Blue
-    'radial-gradient(circle at 30% 30%, #10b981, #064e3b)', // Green
-    'radial-gradient(circle at 30% 30%, #f97316, #7c2d12)', // Orange
-    'radial-gradient(circle at 30% 30%, #ec4899, #831843)', // Pink
-    'radial-gradient(circle at 30% 30%, #8b5cf6, #4c1d95)', // Purple
-    'radial-gradient(circle at 30% 30%, #06b6d4, #164e63)', // Teal
-    'radial-gradient(circle at 30% 30%, #eab308, #713f12)', // Gold
-    'radial-gradient(circle at 30% 30%, #a855f7, #581c87)', // Dark Purple
-    'radial-gradient(circle at 30% 30%, #84cc16, #3f6212)'  // Olive
+  if (!entries.length) {
+    wrap.innerHTML = '<div class="empty-state">No sales recorded for this period.</div>';
+    return;
+  }
+
+  // Distinct rich themes with matching glowing shadows
+  const bubbleThemes = [
+    { bg: 'radial-gradient(circle at 35% 35%, #38bdf8 0%, #0284c7 60%, #0369a1 100%)', glow: 'rgba(56, 189, 248, 0.45)' },
+    { bg: 'radial-gradient(circle at 35% 35%, #34d399 0%, #059669 60%, #047857 100%)', glow: 'rgba(52, 211, 153, 0.45)' },
+    { bg: 'radial-gradient(circle at 35% 35%, #fbbf24 0%, #d97706 60%, #b45309 100%)', glow: 'rgba(251, 191, 36, 0.45)' },
+    { bg: 'radial-gradient(circle at 35% 35%, #ec4899 0%, #be185d 60%, #9d174d 100%)', glow: 'rgba(236, 72, 153, 0.45)' },
+    { bg: 'radial-gradient(circle at 35% 35%, #a855f7 0%, #7e22ce 60%, #6b21a8 100%)', glow: 'rgba(168, 85, 247, 0.45)' },
+    { bg: 'radial-gradient(circle at 35% 35%, #06b6d4 0%, #0891b2 60%, #0e7490 100%)', glow: 'rgba(6, 182, 212, 0.45)' },
+    { bg: 'radial-gradient(circle at 35% 35%, #f97316 0%, #c2410c 60%, #9a3412 100%)', glow: 'rgba(249, 115, 22, 0.45)' },
+    { bg: 'radial-gradient(circle at 35% 35%, #f43f5e 0%, #e11d48 60%, #be123c 100%)', glow: 'rgba(244, 63, 94, 0.45)' },
+    { bg: 'radial-gradient(circle at 35% 35%, #84cc16 0%, #65a30d 60%, #4d7c0f 100%)', glow: 'rgba(132, 204, 22, 0.45)' }
   ];
 
   const positions = [
-    { left: '50%', top: '50%' }, // 1 (Blue) - Center
-    { left: '25%', top: '30%' }, // 2 (Green) - Top left
-    { left: '75%', top: '30%' }, // 3 (Orange) - Top right
-    { left: '25%', top: '75%' }, // 4 (Pink) - Bottom left
-    { left: '75%', top: '75%' }, // 5 (Purple) - Bottom right
-    { left: '50%', top: '15%' }, // 6 (Teal) - Top center
-    { left: '50%', top: '85%' }, // 7 (Gold) - Bottom center
-    { left: '10%', top: '50%' }, // 8 (Snacks) - Far left
-    { left: '90%', top: '50%' }, // 9 (Dairy) - Far right
+    { left: '48%', top: '50%' }, // 1 (Largest) - Center
+    { left: '21%', top: '28%' }, // 2 (Top Left)
+    { left: '78%', top: '28%' }, // 3 (Top Right)
+    { left: '20%', top: '74%' }, // 4 (Bottom Left)
+    { left: '78%', top: '74%' }, // 5 (Bottom Right)
+    { left: '48%', top: '16%' }, // 6 (Top Center)
+    { left: '48%', top: '84%' }, // 7 (Bottom Center)
+    { left: '9%',  top: '50%' }, // 8 (Far Left)
+    { left: '90%', top: '50%' }  // 9 (Far Right)
   ];
 
   const topEntries = entries.slice(0, 9);
@@ -599,20 +617,21 @@ function renderSalesByCategory(products, sales30, totalRevenue) {
   topEntries.forEach(function(e, i) {
     const name = e[0];
     const value = e[1];
-    const pct = totalRevenue ? Math.round((value / totalRevenue) * 100) : 0;
+    const pct = displayTotal ? Math.round((value / displayTotal) * 100) : 0;
     
-    // Scale size between 70px and 120px based on percentage
-    let size = 70 + (pct / 30) * 50;
-    if (size > 120) size = 120;
-    if (size < 70) size = 70;
+    // Scale size comfortably between 78px and 125px for clear spread layout
+    let size = 78 + Math.round((pct / 35) * 40);
+    if (size > 125) size = 125;
+    if (size < 78) size = 78;
     
-    const pos = positions[i] || { left: (10 + i*10) + '%', top: '80%' };
-    const bg = gradients[i % gradients.length];
+    const theme = bubbleThemes[i % bubbleThemes.length];
+    const pos = positions[i] || { left: (10 + i * 10) + '%', top: '50%' };
+    const delay = (i * 0.45).toFixed(2);
     
-    html += '<div class="bubble-node" style="width: ' + size + 'px; height: ' + size + 'px; background: ' + bg + ';">' +
+    html += '<div class="bubble-node" style="width: ' + size + 'px; height: ' + size + 'px; left: ' + pos.left + '; top: ' + pos.top + '; background: ' + theme.bg + '; --bubble-glow: ' + theme.glow + '; animation-delay: ' + delay + 's;" title="' + escapeHtml(name) + ': ' + formatCurrency(value) + ' (' + pct + '%)">' +
       '<div class="bubble-title">' + escapeHtml(name) + '</div>' +
       '<div class="bubble-value">' + formatCurrency(value) + '</div>' +
-      '<div class="bubble-pct">' + pct + '%</div>' +
+      '<div class="bubble-pct-badge">' + pct + '%</div>' +
     '</div>';
   });
 
@@ -806,7 +825,15 @@ function renderInventoryGauge(products, health) {
 function renderStockValueByCategory(products) {
   const ctx = document.getElementById('chart-stock-value');
   if (!ctx) return;
-  if (window.chartInstances.stockValue) window.chartInstances.stockValue.destroy();
+  
+  if (window.chartInstances.stockValue) {
+    window.chartInstances.stockValue.destroy();
+  }
+
+  const isLight = getActiveThemeIsLight();
+  const labelColor = isLight ? '#0f172a' : '#ffffff';
+  const gridColor = isLight ? 'rgba(15, 23, 42, 0.2)' : 'rgba(255, 255, 255, 0.25)';
+  const angleLineColor = isLight ? 'rgba(15, 23, 42, 0.18)' : 'rgba(255, 255, 255, 0.22)';
 
   const byCategory = {};
   for (const p of products) {
@@ -837,8 +864,8 @@ function renderStockValueByCategory(products) {
     beforeDatasetsDraw: function (chart) {
       const ctx = chart.ctx;
       ctx.save();
-      ctx.shadowColor = 'rgba(139, 92, 246, 0.8)';
-      ctx.shadowBlur = 15;
+      ctx.shadowColor = isLight ? 'rgba(14, 165, 233, 0.4)' : 'rgba(192, 132, 252, 0.8)';
+      ctx.shadowBlur = 18;
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 0;
     },
@@ -847,6 +874,26 @@ function renderStockValueByCategory(products) {
     }
   };
 
+  const canvas = ctx.getContext('2d');
+  
+  // High-contrast gradient fills for Light and Dark modes
+  let datasetBg = isLight ? 'rgba(14, 165, 233, 0.35)' : 'rgba(168, 85, 247, 0.45)';
+  try {
+    const gradient = canvas.createRadialGradient(110, 110, 0, 110, 110, 120);
+    if (isLight) {
+      gradient.addColorStop(0, 'rgba(14, 165, 233, 0.65)');
+      gradient.addColorStop(0.5, 'rgba(99, 102, 241, 0.45)');
+      gradient.addColorStop(1, 'rgba(147, 51, 234, 0.25)');
+    } else {
+      gradient.addColorStop(0, 'rgba(56, 189, 248, 0.7)');
+      gradient.addColorStop(0.5, 'rgba(168, 85, 247, 0.55)');
+      gradient.addColorStop(1, 'rgba(99, 102, 241, 0.4)');
+    }
+    datasetBg = gradient;
+  } catch (err) {
+    datasetBg = isLight ? 'rgba(14, 165, 233, 0.4)' : 'rgba(168, 85, 247, 0.4)';
+  }
+
   window.chartInstances.stockValue = new Chart(ctx, {
     type: 'radar',
     data: {
@@ -854,44 +901,46 @@ function renderStockValueByCategory(products) {
       datasets: [{
         label: 'Stock Value ($)',
         data: data,
-        backgroundColor: function(context) {
-          const chart = context.chart;
-          const {ctx, chartArea} = chart;
-          if (!chartArea) return;
-          const centerX = (chartArea.left + chartArea.right) / 2;
-          const centerY = (chartArea.top + chartArea.bottom) / 2;
-          const r = Math.min(chartArea.right - chartArea.left, chartArea.bottom - chartArea.top) / 2;
-          const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, r);
-          gradient.addColorStop(0, 'rgba(56, 189, 248, 0.6)');
-          gradient.addColorStop(0.5, 'rgba(99, 102, 241, 0.5)');
-          gradient.addColorStop(1, 'rgba(139, 92, 246, 0.3)');
-          return gradient;
-        },
-        borderColor: '#a855f7',
-        pointBackgroundColor: '#fff',
-        pointBorderColor: '#a855f7',
-        pointHoverBackgroundColor: '#fff',
+        backgroundColor: datasetBg,
+        borderColor: isLight ? '#0284c7' : '#c084fc',
+        pointBackgroundColor: isLight ? '#0284c7' : '#ffffff',
+        pointBorderColor: isLight ? '#ffffff' : '#c084fc',
+        pointHoverBackgroundColor: '#ffffff',
         pointHoverBorderColor: '#38bdf8',
-        borderWidth: 2,
-        pointRadius: 4,
+        borderWidth: 2.5,
+        pointRadius: 4.5,
         pointBorderWidth: 2,
-        pointHoverRadius: 6
+        pointHoverRadius: 7
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      layout: { padding: 15 },
+      layout: { padding: 12 },
       interaction: { mode: 'nearest', intersect: false },
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: { label: function (c) { return ' ' + formatCurrency(c.parsed.r); } } }
+        tooltip: {
+          backgroundColor: isLight ? '#ffffff' : '#090e1a',
+          borderColor: isLight ? '#0284c7' : '#38bdf8',
+          borderWidth: 1.5,
+          titleColor: '#0284c7',
+          bodyColor: isLight ? '#0f172a' : '#ffffff',
+          bodyFont: { size: 13, weight: 'bold' },
+          padding: 10,
+          cornerRadius: 8,
+          callbacks: { label: function (c) { return ' Stock Value: ' + formatCurrency(c.parsed.r); } }
+        }
       },
       scales: {
         r: {
-          angleLines: { color: 'rgba(255, 255, 255, 0.08)', lineWidth: 1 },
-          grid: { color: 'rgba(255, 255, 255, 0.08)', circular: true, lineWidth: 1 },
-          pointLabels: { color: '#f8fafc', font: { size: 11.5, weight: '500' } },
+          angleLines: { color: angleLineColor, lineWidth: 1.2 },
+          grid: { color: gridColor, circular: true, lineWidth: 1.2 },
+          pointLabels: {
+            color: labelColor,
+            font: { size: 12, weight: '700' },
+            backdropColor: 'transparent'
+          },
           ticks: { display: false }
         }
       }
@@ -900,9 +949,15 @@ function renderStockValueByCategory(products) {
   });
 }
 
+window.renderDashboard = renderDashboard;
+
 function renderMonthlySales(sales) {
   const ctx = document.getElementById('chart-monthly-sales');
   if (!ctx) return;
+
+  if (window.chartInstances.monthlySales) {
+    window.chartInstances.monthlySales.destroy();
+  }
 
   const byMonth = {};
   for (const sale of sales) {
@@ -923,55 +978,72 @@ function renderMonthlySales(sales) {
     data.push(Math.round(byMonth[key] || 0));
   }
 
-  new Chart(ctx, {
-    type: 'line',
+  const canvas = ctx.getContext('2d');
+  const gradientBar = canvas.createLinearGradient(0, 0, 0, 220);
+  gradientBar.addColorStop(0, '#38bdf8');
+  gradientBar.addColorStop(0.5, '#6366f1');
+  gradientBar.addColorStop(1, '#8b5cf6');
+
+  // Super Bright Neon Cyan Glow Gradient for Hover
+  const gradientHover = canvas.createLinearGradient(0, 0, 0, 220);
+  gradientHover.addColorStop(0, '#e0f2fe'); // Ultra bright white-cyan top
+  gradientHover.addColorStop(0.4, '#38bdf8'); // Electric cyan
+  gradientHover.addColorStop(1, '#818cf8'); // Glowing indigo
+
+  window.chartInstances.monthlySales = new Chart(ctx, {
+    type: 'bar',
     data: {
       labels: labels,
       datasets: [{
-        label: 'Revenue ($)',
+        label: 'Monthly Revenue ($)',
         data: data,
-        borderColor: '#8b5cf6',
-        backgroundColor: function(context) {
-          const chart = context.chart;
-          const {ctx, chartArea} = chart;
-          if (!chartArea) return;
-          const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-          gradient.addColorStop(0, 'rgba(139, 92, 246, 0)');
-          gradient.addColorStop(1, 'rgba(139, 92, 246, 0.6)');
-          return gradient;
-        },
-        borderWidth: 3,
-        pointBackgroundColor: '#1e1e2d',
-        pointBorderColor: '#8b5cf6',
-        pointBorderWidth: 2,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        fill: true,
-        tension: 0.4
+        backgroundColor: gradientBar,
+        hoverBackgroundColor: gradientHover,
+        borderColor: 'transparent',
+        hoverBorderColor: '#ffffff',
+        hoverBorderWidth: 2,
+        borderRadius: 8,
+        borderSkipped: false,
+        barPercentage: 0.48,
+        categoryPercentage: 0.7
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      animation: {
+        duration: 800,
+        easing: 'easeOutQuart'
+      },
+      transitions: {
+        active: {
+          animation: {
+            duration: 300,
+            easing: 'easeOutCubic'
+          }
+        }
+      },
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: 'rgba(15, 23, 42, 0.95)',
-          titleColor: '#94a3b8',
-          bodyColor: '#fff',
+          backgroundColor: '#090e1a',
+          borderColor: '#38bdf8',
+          borderWidth: 1,
+          titleColor: '#38bdf8',
+          bodyColor: '#ffffff',
           bodyFont: { size: 14, weight: 'bold' },
           padding: 12,
           cornerRadius: 8,
           displayColors: false,
           callbacks: {
-            label: function(c) { return '$' + c.parsed.y.toLocaleString(); }
+            label: function(c) { return ' Revenue: $' + c.parsed.y.toLocaleString(); }
           }
         }
       },
       scales: {
         x: {
           grid: { display: false, drawBorder: false },
-          ticks: { color: '#94a3b8', font: { size: 11, weight: '500' }, padding: 12, maxRotation: 0 }
+          ticks: { color: '#94a3b8', font: { size: 12, weight: '600' }, padding: 8 }
         },
         y: {
           border: { display: false },
@@ -979,8 +1051,11 @@ function renderMonthlySales(sales) {
           ticks: {
             color: '#94a3b8',
             font: { size: 11, weight: '500' },
-            callback: function(value) { return '$' + (value / 1000).toFixed(0) + 'k'; },
-            padding: 12
+            callback: function(value) {
+              if (value >= 1000) return '$' + (value / 1000).toFixed(0) + 'k';
+              return '$' + value;
+            },
+            padding: 10
           }
         }
       }
@@ -1057,3 +1132,36 @@ function makeLegend(elementId, items) {
 // Keep Chart.js defaults in sync with the dark theme
 Chart.defaults.color = '#94a3b8';
 Chart.defaults.font.family = "'Inter', sans-serif";
+
+function setupChartFilters() {
+  const filterBtns = document.querySelectorAll('.chart-filter-btn');
+  filterBtns.forEach(function (select) {
+    select.addEventListener('change', function () {
+      const target = this.getAttribute('data-target');
+      const val = this.value;
+      const sales = getSales();
+      const products = getProducts();
+
+      let days = 30;
+      if (val === 'this_month') {
+        days = new Date().getDate();
+      } else if (val === 'all') {
+        days = 365;
+      }
+
+      const cutoff = parseDate(daysAgoKey(days));
+      const filteredSales = sales.filter(function (s) { return parseDate(s.date) >= cutoff; });
+
+      if (target === 'salesByCategory') {
+        const rev = revenueOf(filteredSales);
+        renderSalesByCategory(products, filteredSales, rev);
+      } else if (target === 'salesTrend') {
+        renderRevenueTrend(sales, val);
+      } else if (target === 'topSelling') {
+        renderTopSellingChart(filteredSales);
+      } else if (target === 'forecastActual') {
+        renderForecastVsActual(sales, val);
+      }
+    });
+  });
+}

@@ -12,28 +12,30 @@ if (typeof getCurrentUser === 'function' && !getCurrentUser()) {
 const sidebarHTML = `
 <aside class="sidebar">
     <div class="sidebar-logo">
-        <div class="logo-icon" title="InventoryIQ">
-            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="iq-grad" x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0" stop-color="#38bdf8"/>
-                        <stop offset="0.5" stop-color="#0ea5e9"/>
-                        <stop offset="1" stop-color="#06b6d4"/>
-                    </linearGradient>
-                </defs>
-                <rect x="2" y="2" width="36" height="36" rx="11" fill="url(#iq-grad)"/>
-                <rect x="2.5" y="2.5" width="35" height="35" rx="10.5" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1"/>
-                <rect x="9.5" y="20" width="4.5" height="9" rx="1.5" fill="#ffffff" fill-opacity="0.45"/>
-                <rect x="17" y="15" width="4.5" height="14" rx="1.5" fill="#ffffff" fill-opacity="0.7"/>
-                <rect x="24.5" y="9" width="4.5" height="20" rx="1.5" fill="#ffffff"/>
-                <path d="M8.5 27.5 L17.5 21.5 L25.5 13.5 L32 7.5" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                <circle cx="32" cy="7.5" r="2.6" fill="#ffffff"/>
-            </svg>
-        </div>
-        <div class="logo-text">
-            <h2>Inventory<span>IQ</span></h2>
-            <p>Forecast &middot; Reorder &middot; Grow</p>
-        </div>
+        <a href="index.html" class="sidebar-logo-link" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;">
+            <div class="logo-icon" title="InventoryIQ">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="iq-grad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" stop-color="#38bdf8"/>
+                            <stop offset="0.5" stop-color="#0ea5e9"/>
+                            <stop offset="1" stop-color="#6366f1"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="2" y="2" width="36" height="36" rx="11" fill="url(#iq-grad)"/>
+                    <rect x="2.5" y="2.5" width="35" height="35" rx="10.5" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
+                    <rect x="9.5" y="21" width="4.5" height="8" rx="1.5" fill="#ffffff" fill-opacity="0.5"/>
+                    <rect x="17" y="16" width="4.5" height="13" rx="1.5" fill="#ffffff" fill-opacity="0.8"/>
+                    <rect x="24.5" y="10" width="4.5" height="19" rx="1.5" fill="#ffffff"/>
+                    <path d="M 8.5 25 Q 16 19 24.5 13 T 32 8" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                    <circle cx="32" cy="8" r="2.8" fill="#38bdf8" stroke="#ffffff" stroke-width="1.2"/>
+                </svg>
+            </div>
+            <div class="logo-text">
+                <h2>Inventory<span>IQ</span></h2>
+                <p>Forecast &middot; Reorder &middot; Grow</p>
+            </div>
+        </a>
         <button class="icon-btn mobile-close-btn" id="sidebar-close-btn" aria-label="Close menu" style="display: none; margin-left: auto; border: none; font-size: 20px;"><i class="ph ph-x"></i></button>
     </div>
 

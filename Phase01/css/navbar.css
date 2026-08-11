@@ -1046,3 +1046,241 @@ body.theme-light .pulse-table-wrap { background: #f8fafc; border-color: #e2e8f0;
 body.theme-light .reorder-row { background: #ffffff; border-color: #e2e8f0; }
 body.theme-light .reorder-row:hover { background: #f8fafc; border-color: #cbd5e1; }
 body.theme-light .activity-row:hover { background: #f8fafc; }
+
+/* ==================== COMPLETE HIGH-CONTRAST LIGHT THEME OVERRIDES ==================== */
+
+body.theme-light {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Headings & Text Defaults */
+body.theme-light h1,
+body.theme-light h2,
+body.theme-light h3,
+body.theme-light h4,
+body.theme-light h5,
+body.theme-light h6 {
+  color: #0f172a !important;
+}
+
+body.theme-light p,
+body.theme-light span,
+body.theme-light label,
+body.theme-light small,
+body.theme-light strong,
+body.theme-light b {
+  color: #334155;
+}
+
+/* Stat Cards, KPI Cards & Panels */
+body.theme-light .stat-card,
+body.theme-light .kpi-card,
+body.theme-light .chart-panel,
+body.theme-light .panel,
+body.theme-light .table-wrap,
+body.theme-light .toolbar,
+body.theme-light .card,
+body.theme-light .forecast-card,
+body.theme-light .reorder-card,
+body.theme-light .reports-card,
+body.theme-light .settings-card,
+body.theme-light .profile-card,
+body.theme-light .gauge-card,
+body.theme-light .inventory-card {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+}
+
+body.theme-light .stat-card .stat-value,
+body.theme-light .kpi-card .kpi-value,
+body.theme-light .stat-value,
+body.theme-light .metric-value,
+body.theme-light .forecast-val,
+body.theme-light .gauge-value,
+body.theme-light .stat-number {
+  color: #0f172a !important;
+}
+
+body.theme-light .stat-card label,
+body.theme-light .stat-card .stat-label,
+body.theme-light .kpi-card label,
+body.theme-light .kpi-label,
+body.theme-light .field label,
+body.theme-light .stat-title,
+body.theme-light .stat-label {
+  color: #475569 !important;
+  font-weight: 600;
+}
+
+body.theme-light .stat-card .stat-sub,
+body.theme-light .stat-card .stat-sub span,
+body.theme-light .stat-sub,
+body.theme-light .chart-panel-header .chart-sub,
+body.theme-light .chart-sub,
+body.theme-light .panel-header p {
+  color: #64748b !important;
+}
+
+/* Tables */
+body.theme-light table,
+body.theme-light .data-table,
+body.theme-light .pulse-table {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+body.theme-light th,
+body.theme-light .data-table th,
+body.theme-light .pulse-table th {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  font-weight: 700;
+  border-bottom: 2px solid #cbd5e1 !important;
+}
+
+body.theme-light td,
+body.theme-light .data-table td,
+body.theme-light .pulse-table td {
+  color: #0f172a !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+body.theme-light tr:hover {
+  background: #f8fafc !important;
+}
+
+body.theme-light .prod-name,
+body.theme-light .prod-title,
+body.theme-light .item-name {
+  color: #0f172a !important;
+  font-weight: 600;
+}
+
+body.theme-light .prod-sku,
+body.theme-light .prod-meta span,
+body.theme-light .item-sub {
+  color: #64748b !important;
+}
+
+/* Alerts Feed & Items */
+body.theme-light .reorder-row,
+body.theme-light .alert-item,
+body.theme-light .activity-row,
+body.theme-light .activity-item,
+body.theme-light .mockup-alert-item {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+body.theme-light .reorder-row:hover,
+body.theme-light .alert-item:hover,
+body.theme-light .activity-row:hover {
+  background: #f8fafc !important;
+  border-color: #94a3b8 !important;
+}
+
+body.theme-light .reorder-row .item-name,
+body.theme-light .alert-item strong,
+body.theme-light .activity-title {
+  color: #0f172a !important;
+}
+
+body.theme-light .reorder-row .item-meta,
+body.theme-light .alert-item p,
+body.theme-light .activity-desc,
+body.theme-light .activity-time {
+  color: #475569 !important;
+}
+
+/* Forms, Inputs, Selects */
+body.theme-light input,
+body.theme-light select,
+body.theme-light textarea,
+body.theme-light .field input,
+body.theme-light .field select,
+body.theme-light .field textarea,
+body.theme-light .search-box input {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+body.theme-light input::placeholder,
+body.theme-light textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+body.theme-light option {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* Buttons & Filters */
+body.theme-light .time-filter-btn,
+body.theme-light .chart-filter-btn,
+body.theme-light .tab-btn {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border-color: #cbd5e1 !important;
+}
+
+body.theme-light .time-filter-btn:hover,
+body.theme-light .chart-filter-btn:hover,
+body.theme-light .tab-btn:hover {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+body.theme-light .time-filter-btn.active,
+body.theme-light .chart-filter-btn.active,
+body.theme-light .tab-btn.active {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  border-color: #0284c7 !important;
+}
+
+/* Modals & Dropdowns */
+body.theme-light .modal,
+body.theme-light .modal-content,
+body.theme-light .user-dropdown,
+body.theme-light .dropdown-menu {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15) !important;
+  color: #0f172a !important;
+}
+
+body.theme-light .modal-header,
+body.theme-light .modal-footer,
+body.theme-light .user-dropdown-head {
+  border-color: #e2e8f0 !important;
+}
+
+/* Topbar & Search */
+body.theme-light .global-topbar {
+  background: #ffffff !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+
+body.theme-light .search-box,
+body.theme-light .time-display,
+body.theme-light .date-chip {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+body.theme-light .date-chip span,
+body.theme-light .greeting-line {
+  color: #475569 !important;
+}
+
+/* Category Balloons in Sales by Category */
+body.theme-light .bubble-node .bubble-title,
+body.theme-light .bubble-node .bubble-value,
+body.theme-light .bubble-node .bubble-pct-badge {
+  color: #ffffff !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8) !important;
+}

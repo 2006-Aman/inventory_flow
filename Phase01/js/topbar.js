@@ -117,10 +117,14 @@ class AppTopbar extends HTMLElement {
 
     setupThemeToggle() {
         const btn = this.querySelector('#theme-toggle');
+        if (!btn) return;
         btn.addEventListener('click', () => {
             const isLight = document.body.classList.toggle('theme-light');
             localStorage.setItem('theme', isLight ? 'light' : 'dark');
             this.syncThemeIcon(isLight);
+            if (typeof window.renderDashboard === 'function') {
+                window.renderDashboard();
+            }
         });
     }
 

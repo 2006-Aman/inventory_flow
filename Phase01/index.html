@@ -4,21 +4,336 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InventoryIQ</title>
+    <title>InventoryIQ &middot; Predict Demand. Optimize Stock. Grow Smarter.</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="InventoryIQ automatically calculates reorder points, safety stock buffers, and 7 to 30-day demand forecasts to eliminate stockouts and minimize inventory holding costs.">
+    
+    <!-- Google Fonts & Phosphor Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/landing.css">
+    
+    <!-- Scripts -->
     <script src="js/utils.js"></script>
     <script src="js/storage.js"></script>
-    <script>
-        // Landing redirect: signed-in users go to the dashboard, otherwise to sign in.
-        initializeDatabase().then(function () {
-            window.location.replace(getCurrentUser() ? 'dashboard.html' : 'login.html');
-        });
-    </script>
+    <script src="js/landing.js"></script>
 </head>
 
-<body style="background:#060a12;">
-    <p style="color:#64748b; font-family:monospace; padding:40px; text-align:center;">Redirecting&hellip;</p>
+<body class="landing-page hero-only-page">
+
+    <!-- Ambient Glowing Background Elements -->
+    <div class="bg-glow-container">
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+        <div class="bg-orb bg-orb-3"></div>
+        <div class="bg-grid-overlay"></div>
+    </div>
+
+    <!-- ==================== HEADER / NAVBAR ==================== -->
+    <header class="lp-header">
+        <div class="lp-container">
+            <nav class="lp-nav">
+                <!-- Brand Logo -->
+                <a href="index.html" class="lp-brand">
+                    <div class="lp-logo-box">
+                        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="nav-logo-grad" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0" stop-color="#38bdf8"/>
+                                    <stop offset="50%" stop-color="#0ea5e9"/>
+                                    <stop offset="1" stop-color="#6366f1"/>
+                                </linearGradient>
+                            </defs>
+                            <rect x="2" y="2" width="36" height="36" rx="11" fill="url(#nav-logo-grad)"/>
+                            <rect x="2.5" y="2.5" width="35" height="35" rx="10.5" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
+                            <rect x="9.5" y="21" width="4.5" height="8" rx="1.5" fill="#ffffff" fill-opacity="0.5"/>
+                            <rect x="17" y="16" width="4.5" height="13" rx="1.5" fill="#ffffff" fill-opacity="0.8"/>
+                            <rect x="24.5" y="10" width="4.5" height="19" rx="1.5" fill="#ffffff"/>
+                            <path d="M 8.5 25 Q 16 19 24.5 13 T 32 8" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                            <circle cx="32" cy="8" r="2.8" fill="#38bdf8" stroke="#ffffff" stroke-width="1.2"/>
+                        </svg>
+                    </div>
+                    <div class="lp-brand-text">
+                        <h1>Inventory<span>IQ</span></h1>
+                        <p>Forecast &middot; Reorder &middot; Grow</p>
+                    </div>
+                </a>
+
+                <!-- Nav Action Buttons (Sign In + Sign Up) -->
+                <div class="lp-actions" id="lp-nav-actions">
+                    <a href="login.html" class="btn-lp btn-lp-glass" style="padding: 10px 22px; font-size: 14px;">Sign In</a>
+                    <a href="signup.html" class="btn-lp btn-lp-primary" style="padding: 10px 24px; font-size: 14px;">
+                        <i class="ph ph-user-plus"></i> Sign Up
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ==================== SPLIT HERO SECTION WITH ANIMATED 3D LAPTOP ==================== -->
+    <section class="hero-section hero-split-layout">
+        <div class="lp-container">
+            <div class="hero-split-grid">
+                
+                <!-- LEFT CONTENT -->
+                <div class="hero-left-content">
+                    
+                    <!-- Pill Tag -->
+                    <div class="hero-badge-pill">
+                        <i class="ph ph-star-fill" style="color: var(--cyan); font-size: 14px;"></i>
+                        <span>SMART INVENTORY. STRONGER BUSINESS.</span>
+                    </div>
+
+                    <!-- Main Split Headline -->
+                    <h1 class="hero-title-split">
+                        Predict Demand.<br>
+                        Optimize Stock.<br>
+                        <span class="gradient-text animated-shimmer-text">Grow Smarter.</span>
+                    </h1>
+
+                    <!-- Subtitle -->
+                    <p class="hero-subtitle-split">
+                        Forecast demand, calculate dynamic reorder points <code>(RP = LT &times; ADD + SS)</code>, and maintain the perfect stock level &mdash; all in one smart and simple platform.
+                    </p>
+
+                    <!-- CTAs -->
+                    <div class="hero-cta-group" id="hero-cta-main" style="justify-content: flex-start;">
+                        <button onclick="handleLaunchDashboard()" class="btn-lp btn-lp-primary hero-btn-glow" style="font-size: 16px; padding: 16px 36px;">
+                            Start Managing Now <i class="ph ph-arrow-right" style="margin-left: 6px;"></i>
+                        </button>
+                        <button onclick="quickDemoLogin('admin')" class="btn-lp btn-lp-glass" style="font-size: 16px; padding: 16px 28px;">
+                            Explore Demo <i class="ph ph-play-circle" style="margin-left: 6px;"></i>
+                        </button>
+                    </div>
+
+                    <!-- 4 Mini Stat Cards Grid -->
+                    <div class="hero-stats-row-4">
+                        <div class="hero-stat-card-mini">
+                            <div class="stat-mini-icon blue"><i class="ph ph-cube"></i></div>
+                            <div>
+                                <strong>50+</strong>
+                                <span>Products Tracked</span>
+                            </div>
+                        </div>
+
+                        <div class="hero-stat-card-mini">
+                            <div class="stat-mini-icon green"><i class="ph ph-trend-up"></i></div>
+                            <div>
+                                <strong>99.8%</strong>
+                                <span>Forecast Accuracy</span>
+                            </div>
+                        </div>
+
+                        <div class="hero-stat-card-mini">
+                            <div class="stat-mini-icon amber"><i class="ph ph-bell"></i></div>
+                            <div>
+                                <strong>24/7</strong>
+                                <span>Reorder Alerts</span>
+                            </div>
+                        </div>
+
+                        <div class="hero-stat-card-mini">
+                            <div class="stat-mini-icon purple"><i class="ph ph-database"></i></div>
+                            <div>
+                                <strong>300+</strong>
+                                <span>Sales Synced</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trust Tag -->
+                    <div class="hero-trust-tag">
+                        <i class="ph ph-shield-check" style="color: var(--emerald); font-size: 18px;"></i>
+                        <span>Trusted by businesses to optimize inventory and maximize profits.</span>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: 3D ANIMATED LAPTOP & FLOATING BADGES -->
+                <div class="hero-right-laptop">
+                    
+                    <!-- Floating Metric Badges around Laptop -->
+                    <div class="laptop-floating-badge badge-top-left-float">
+                        <div class="badge-icon-box cyan"><i class="ph ph-chart-line-up"></i></div>
+                        <div>
+                            <strong>Demand Forecasting</strong>
+                            <span>7d Moving Average</span>
+                        </div>
+                    </div>
+
+                    <div class="laptop-floating-badge badge-top-right-float">
+                        <div class="badge-icon-box emerald"><i class="ph ph-bell-ringing"></i></div>
+                        <div>
+                            <strong>Smart Reorder Alerts</strong>
+                            <span>Safety Buffer Active</span>
+                        </div>
+                    </div>
+
+                    <div class="laptop-floating-badge badge-bottom-right-float">
+                        <div class="badge-icon-box purple"><i class="ph ph-package"></i></div>
+                        <div>
+                            <strong>Inventory Optimization</strong>
+                            <span>Zero Stockouts</span>
+                        </div>
+                    </div>
+
+                    <!-- 3D Laptop Perspective Mockup Frame -->
+                    <div class="laptop-stage-3d">
+                        <div class="laptop-chassis-3d">
+                            
+                            <!-- Laptop Screen Lid -->
+                            <div class="laptop-screen-lid">
+                                <div class="laptop-webcam"></div>
+                                
+                                <!-- Screen Display Content -->
+                                <div class="laptop-display-inner">
+                                    
+                                    <!-- Laptop Header -->
+                                    <div class="laptop-app-bar">
+                                        <div class="app-brand-title">
+                                            <span class="app-dot"></span> InventoryIQ Dashboard
+                                        </div>
+                                        <div class="app-live-tag">
+                                            <i class="ph ph-circle-pulse"></i> LIVE ENGINE
+                                        </div>
+                                    </div>
+
+                                    <!-- Laptop KPI Strip -->
+                                    <div class="laptop-kpi-grid">
+                                        <div class="laptop-kpi-item">
+                                            <span class="kpi-label">Total Inventory</span>
+                                            <span class="kpi-val">50 SKUs</span>
+                                            <span class="kpi-delta green">&uarr; 12.5%</span>
+                                        </div>
+                                        <div class="laptop-kpi-item">
+                                            <span class="kpi-label">Low Stock</span>
+                                            <span class="kpi-val" style="color: var(--amber);">3 Items</span>
+                                            <span class="kpi-delta amber">&uarr; Reorder</span>
+                                        </div>
+                                        <div class="laptop-kpi-item">
+                                            <span class="kpi-label">Reorder Alerts</span>
+                                            <span class="kpi-val" style="color: var(--rose);">2 Active</span>
+                                            <span class="kpi-delta rose">Critical</span>
+                                        </div>
+                                        <div class="laptop-kpi-item">
+                                            <span class="kpi-label">30-Day Revenue</span>
+                                            <span class="kpi-val" style="color: var(--cyan);">$148,250</span>
+                                            <span class="kpi-delta green">&uarr; 15.7%</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Laptop Main Chart & Feed Split -->
+                                    <div class="laptop-content-split">
+                                        
+                                        <!-- Chart Box -->
+                                        <div class="laptop-panel-card">
+                                            <div class="panel-card-head">
+                                                <span>Demand Forecast &amp; Sales Trend</span>
+                                                <span class="pill-mini">Moving Avg</span>
+                                            </div>
+                                            <div class="laptop-chart-svg-wrap">
+                                                <svg viewBox="0 0 280 90" preserveAspectRatio="none" style="width:100%; height:100%;">
+                                                    <defs>
+                                                        <linearGradient id="laptop-chart-grad" x1="0" y1="0" x2="0" y2="1">
+                                                            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.45"/>
+                                                            <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+                                                        </linearGradient>
+                                                    </defs>
+                                                    <line x1="0" y1="25" x2="280" y2="25" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4"/>
+                                                    <line x1="0" y1="55" x2="280" y2="55" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4"/>
+                                                    
+                                                    <!-- Threshold Line -->
+                                                    <line x1="0" y1="65" x2="280" y2="65" stroke="#f43f5e" stroke-width="1.2" stroke-dasharray="4"/>
+                                                    
+                                                    <path d="M 0 70 Q 50 45 100 58 T 200 25 T 280 12 L 280 90 L 0 90 Z" fill="url(#laptop-chart-grad)"/>
+                                                    <path class="animated-chart-line" d="M 0 70 Q 50 45 100 58 T 200 25 T 280 12" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+                                                    
+                                                    <circle cx="100" cy="58" r="3.5" fill="#ffffff" stroke="#38bdf8" stroke-width="2" class="pulse-node-1"/>
+                                                    <circle cx="200" cy="25" r="3.5" fill="#ffffff" stroke="#38bdf8" stroke-width="2" class="pulse-node-2"/>
+                                                    <circle cx="280" cy="12" r="5" fill="#34d399" stroke="#ffffff" stroke-width="2" class="pulse-node-3"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+
+                                        <!-- Alerts Feed Box -->
+                                        <div class="laptop-panel-card">
+                                            <div class="panel-card-head">
+                                                <span>Smart Reorder Feed</span>
+                                                <span class="pill-mini red">Alert</span>
+                                            </div>
+                                            <div class="laptop-alert-list">
+                                                <div class="laptop-alert-row critical">
+                                                    <div class="alert-mini-icon red"><i class="ph ph-warning"></i></div>
+                                                    <div class="alert-mini-info">
+                                                        <strong>Logitech MX Master 3S</strong>
+                                                        <span>Critical: Stock (2) &le; Safety Stock (5)</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="laptop-alert-row warning">
+                                                    <div class="alert-mini-icon amber"><i class="ph ph-arrows-clockwise"></i></div>
+                                                    <div class="alert-mini-info">
+                                                        <strong>Dell UltraSharp 27" 4K</strong>
+                                                        <span>Reorder Point Reached (8 left)</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="laptop-alert-row stable">
+                                                    <div class="alert-mini-icon green"><i class="ph ph-check-circle"></i></div>
+                                                    <div class="alert-mini-info">
+                                                        <strong>Keychron K2 Keyboard</strong>
+                                                        <span>Forecast Demand Stable (Optimum: 45)</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                
+                                <div class="laptop-bottom-bezel">
+                                    <span>InventoryIQ Pro</span>
+                                </div>
+                            </div>
+
+                            <!-- Laptop Keyboard Deck Base -->
+                            <div class="laptop-base-deck">
+                                <div class="laptop-notch"></div>
+                                <div class="laptop-keyboard-grid"></div>
+                                <div class="laptop-trackpad-area"></div>
+                                <div class="laptop-deck-glow"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="lp-footer hero-footer-minimal">
+        <div class="lp-container" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div class="lp-logo-box" style="width: 28px; height: 28px;">
+                    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2" y="2" width="36" height="36" rx="11" fill="url(#nav-logo-grad)"/>
+                        <path d="M 8.5 25 Q 16 19 24.5 13 T 32 8" stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none"/>
+                    </svg>
+                </div>
+                <span style="font-weight: 700; font-family: var(--font-heading); color: #fff; font-size: 15px;">InventoryIQ &middot; Predict Demand. Optimize Stock. Grow Smarter.</span>
+            </div>
+            <div style="font-size: 13px; color: var(--lp-text-dim);">
+                &copy; 2026 InventoryIQ. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
 </body>
 </html>

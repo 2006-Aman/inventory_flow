@@ -28,14 +28,15 @@ const DEMAND_DAYS = 90;
 async function initializeDatabase() {
   const missing = [];
   for (const key of Object.values(DB_KEYS)) {
-    if (localStorage.getItem(key) === null) {
+    const val = localStorage.getItem(key);
+    if (val === null || (key === DB_KEYS.sales && (val === '[]' || !JSON.parse(val || '[]').length))) {
       missing.push(key);
     }
   }
 
   if (missing.length > 0) {
     for (const key of missing) {
-      await loadJSON(key);
+      await loadJSON(key, true);
     }
     // Keep the demo alive: shift sale dates so the newest sale is "today"
     shiftSalesDatesToToday();
@@ -49,8 +50,8 @@ async function initializeDatabase() {
 // Load a single JSON file into LocalStorage.
 // If fetch() fails (e.g. the page is opened directly from file://),
 // we fall back to data/seed.js which holds the same data as JavaScript.
-async function loadJSON(key) {
-  if (localStorage.getItem(key) !== null) return; // already stored
+async function loadJSON(key, forceReload = false) {
+  if (!forceReload && localStorage.getItem(key) !== null && localStorage.getItem(key) !== '[]') return;
 
   try {
     const response = await fetch('data/' + key + '.json?nocache=' + new Date().getTime());
@@ -58,19 +59,26 @@ async function loadJSON(key) {
     const data = await response.json();
     localStorage.setItem(key, JSON.stringify(data));
   } catch (error) {
-    await loadSeedFallback();
+    await loadSeedFallback(forceReload);
   }
 }
 
-// Load data/seed.js dynamically and write all four datasets.
+// Load data/seed.js dynamically and write all datasets.
 // Returns a Promise so callers can wait for it.
-function loadSeedFallback() {
+function loadSeedFallback(forceReload = false) {
   return new Promise(function (resolve) {
     function saveFromSeed() {
-      localStorage.setItem(DB_KEYS.products, JSON.stringify(window.SEED_DATA.products || []));
-      localStorage.setItem(DB_KEYS.sales, JSON.stringify(window.SEED_DATA.sales || []));
-      localStorage.setItem(DB_KEYS.categories, JSON.stringify(window.SEED_DATA.categories || []));
-      localStorage.setItem(DB_KEYS.users, JSON.stringify(window.SEED_DATA.users || []));
+      if (typeof window.SEED_DATA !== 'undefined') {
+        for (const key of Object.values(DB_KEYS)) {
+          const val = localStorage.getItem(key);
+          if (forceReload || val === null || val === '[]') {
+            const seedVal = window.SEED_DATA[key];
+            if (Array.isArray(seedVal) && seedVal.length > 0) {
+              localStorage.setItem(key, JSON.stringify(seedVal));
+            }
+          }
+        }
+      }
       resolve();
     }
     if (typeof window.SEED_DATA !== 'undefined') {
@@ -81,7 +89,6 @@ function loadSeedFallback() {
     script.src = 'data/seed.js';
     script.onload = saveFromSeed;
     script.onerror = function () {
-      alert('Could not load the initial database. Please open this project through a local server (for example the Live Server extension in VS Code).');
       resolve();
     };
     document.head.appendChild(script);
