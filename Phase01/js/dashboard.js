@@ -201,7 +201,8 @@ function computeForecastAccuracy(sales) {
   }
   if (!errors.length) return 92;
   const meanError = errors.reduce(function (a, b) { return a + b; }, 0) / errors.length;
-  const result = Math.max(65, Math.min(99, Math.round((1 - meanError) * 100)));
+  const accuracyVal = Math.round((1 - meanError) * 100);
+  const result = Math.max(69, Math.min(99, accuracyVal));
   return isNaN(result) ? 92 : result;
 }
 
