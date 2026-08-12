@@ -6,13 +6,20 @@ let analyticsCharts = {};
 
 document.addEventListener('DOMContentLoaded', async () => {
   await initializeDatabase();
+  renderAnalyticsAll();
+  updateSidebarBadge();
+});
+
+function renderAnalyticsAll() {
   renderKpis();
   renderDayOfWeekChart();
   renderRevenueOrdersChart();
   renderStockHealthChart();
   renderCategoriesTable();
-  updateSidebarBadge();
-});
+}
+
+window.renderAnalyticsAll = renderAnalyticsAll;
+window.renderAll = renderAnalyticsAll;
 
 function getLast90Sales() {
   const sales = getSales();
@@ -58,16 +65,33 @@ function renderKpis() {
   document.getElementById('ana-avg-units').textContent = orderCount ? (totalUnits / orderCount).toFixed(2) : 'n/a';
 }
 
+function getThemeColors() {
+  const isLight = document.body.classList.contains('theme-light');
+  return {
+    isLight: isLight,
+    textColor: isLight ? '#475569' : '#64748b',
+    gridColor: isLight ? 'rgba(203, 213, 225, 0.5)' : 'rgba(148, 163, 184, 0.08)',
+    legendColor: isLight ? '#334155' : '#94a3b8',
+    tooltipBg: isLight ? '#ffffff' : '#0b1220',
+    tooltipTitle: isLight ? '#0f172a' : '#ffffff',
+    tooltipBody: isLight ? '#475569' : '#94a3b8',
+    tooltipBorder: isLight ? '#e2e8f0' : 'rgba(148, 163, 184, 0.2)'
+  };
+}
+
 function renderDayOfWeekChart() {
   const canvas = document.getElementById('chart-dayofweek');
   if (!canvas) return;
 
+  const tc = getThemeColors();
   const recent = getLast90Sales();
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const totals = [0, 0, 0, 0, 0, 0, 0];
   for (const s of recent) {
     totals[parseDate(s.date).getDay()] += Number(s.quantity) * Number(s.sellingPrice);
   }
+
+  if (analyticsCharts.dayofweek) analyticsCharts.dayofweek.destroy();
 
   analyticsCharts.dayofweek = new Chart(canvas.getContext('2d'), {
     type: 'bar',
@@ -85,11 +109,17 @@ function renderDayOfWeekChart() {
       maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        tooltip: { backgroundColor: '#0b1220', borderColor: 'rgba(148,163,184,0.2)', borderWidth: 1, titleColor: '#fff', bodyColor: '#94a3b8' }
+        tooltip: {
+          backgroundColor: tc.tooltipBg,
+          borderColor: tc.tooltipBorder,
+          borderWidth: 1,
+          titleColor: tc.tooltipTitle,
+          bodyColor: tc.tooltipBody
+        }
       },
       scales: {
-        x: { grid: { display: false }, ticks: { color: '#64748b' } },
-        y: { grid: { color: 'rgba(148, 163, 184, 0.08)' }, ticks: { color: '#64748b' } }
+        x: { grid: { display: false }, ticks: { color: tc.textColor } },
+        y: { grid: { color: tc.gridColor }, ticks: { color: tc.textColor } }
       }
     }
   });
@@ -98,6 +128,8 @@ function renderDayOfWeekChart() {
 function renderRevenueOrdersChart() {
   const canvas = document.getElementById('chart-revenue-orders');
   if (!canvas) return;
+
+  const tc = getThemeColors();
 
   // Build month buckets (last 6)
   const months = [];
@@ -119,15 +151,17 @@ function renderRevenueOrdersChart() {
     }
   }
 
+  if (analyticsCharts.revOrders) analyticsCharts.revOrders.destroy();
+
   analyticsCharts.revOrders = new Chart(canvas.getContext('2d'), {
     data: {
       labels: months.map(function (m) { return m.label; }),
       datasets: [
         {
           type: 'bar',
-          label: 'Revenue',
+          label: 'Revenue ($)',
           data: months.map(function (m) { return m.revenue; }),
-          backgroundColor: 'rgba(56, 189, 248, 0.7)',
+          backgroundColor: tc.isLight ? 'rgba(2, 132, 199, 0.85)' : 'rgba(56, 189, 248, 0.7)',
           borderRadius: 4,
           yAxisID: 'y'
         },
@@ -135,11 +169,11 @@ function renderRevenueOrdersChart() {
           type: 'line',
           label: 'Orders',
           data: months.map(function (m) { return m.orders; }),
-          borderColor: '#a78bfa',
+          borderColor: tc.isLight ? '#7c3aed' : '#a78bfa',
           backgroundColor: 'transparent',
           tension: 0.35,
-          borderWidth: 2,
-          pointRadius: 3,
+          borderWidth: 2.5,
+          pointRadius: 4,
           yAxisID: 'y1'
         }
       ]
@@ -148,13 +182,19 @@ function renderRevenueOrdersChart() {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: { labels: { color: '#94a3b8', boxWidth: 12, padding: 16, font: { size: 12 } } },
-        tooltip: { backgroundColor: '#0b1220', borderColor: 'rgba(148,163,184,0.2)', borderWidth: 1, titleColor: '#fff', bodyColor: '#94a3b8' }
+        legend: { labels: { color: tc.legendColor, boxWidth: 12, padding: 16, font: { size: 12 } } },
+        tooltip: {
+          backgroundColor: tc.tooltipBg,
+          borderColor: tc.tooltipBorder,
+          borderWidth: 1,
+          titleColor: tc.tooltipTitle,
+          bodyColor: tc.tooltipBody
+        }
       },
       scales: {
-        x: { grid: { display: false }, ticks: { color: '#64748b' } },
-        y: { position: 'left', grid: { color: 'rgba(148, 163, 184, 0.08)' }, ticks: { color: '#64748b' } },
-        y1: { position: 'right', grid: { display: false }, ticks: { color: '#a78bfa' } }
+        x: { grid: { display: false }, ticks: { color: tc.textColor } },
+        y: { position: 'left', grid: { color: tc.gridColor }, ticks: { color: tc.textColor } },
+        y1: { position: 'right', grid: { display: false }, ticks: { color: tc.isLight ? '#7c3aed' : '#a78bfa' } }
       }
     }
   });
@@ -164,6 +204,8 @@ function renderStockHealthChart() {
   const canvas = document.getElementById('chart-stock-health');
   if (!canvas) return;
 
+  const tc = getThemeColors();
+
   let inStock = 0, low = 0, critical = 0, out = 0;
   for (const p of getProducts()) {
     if (p.status === 'In Stock') inStock++;
@@ -171,6 +213,8 @@ function renderStockHealthChart() {
     else if (p.status === 'Out of Stock') out++;
     else critical++;
   }
+
+  if (analyticsCharts.health) analyticsCharts.health.destroy();
 
   analyticsCharts.health = new Chart(canvas.getContext('2d'), {
     type: 'doughnut',
@@ -186,8 +230,14 @@ function renderStockHealthChart() {
       maintainAspectRatio: false,
       cutout: '62%',
       plugins: {
-        legend: { position: 'right', labels: { color: '#94a3b8', boxWidth: 12, padding: 12, font: { size: 11 } } },
-        tooltip: { backgroundColor: '#0b1220', borderColor: 'rgba(148,163,184,0.2)', borderWidth: 1, titleColor: '#fff', bodyColor: '#94a3b8' }
+        legend: { position: 'right', labels: { color: tc.legendColor, boxWidth: 12, padding: 12, font: { size: 11 } } },
+        tooltip: {
+          backgroundColor: tc.tooltipBg,
+          borderColor: tc.tooltipBorder,
+          borderWidth: 1,
+          titleColor: tc.tooltipTitle,
+          bodyColor: tc.tooltipBody
+        }
       }
     }
   });
@@ -195,6 +245,8 @@ function renderStockHealthChart() {
 
 function renderCategoriesTable() {
   const tbody = document.getElementById('ana-categories-tbody');
+  if (!tbody) return;
+
   const products = getProducts();
 
   const byCat = {};
@@ -219,13 +271,15 @@ function renderCategoriesTable() {
     .sort(function (a, b) { return b.revenue - a.revenue; });
 
   if (!rows.length) {
-    tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No data.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No data available.</td></tr>';
     return;
   }
 
-  tbody.innerHTML = rows.map(function (r) {
+  tbody.innerHTML = rows.map(function (r, index) {
+    const dotColors = ['#38bdf8', '#34d399', '#c084fc', '#fbbf24', '#f472b6', '#60a5fa'];
+    const dotColor = dotColors[index % dotColors.length];
     return '<tr>' +
-      '<td>' + escapeHtml(r.name) + '</td>' +
+      '<td><div class="cat-name-cell"><span class="cat-rank-dot" style="background:' + dotColor + ';"></span>' + escapeHtml(r.name) + '</div></td>' +
       '<td class="num">' + formatNumber(r.products) + '</td>' +
       '<td class="num">' + formatNumber(r.units) + '</td>' +
       '<td class="num">' + formatCurrency(r.revenue) + '</td>' +
