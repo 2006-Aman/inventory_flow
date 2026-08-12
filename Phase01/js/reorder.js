@@ -71,9 +71,9 @@ function renderReorderTable() {
 
     let actionBtn = '';
     if (status === 'Out of Stock' || status === 'Critical' || status === 'Low Stock') {
-      actionBtn = '<button class="btn btn-sm" data-restock="' + escapeHtml(p.id) + '"><i class="ph ph-plus"></i> Restock</button>';
+      actionBtn = '<button class="btn btn-sm btn-gradient" data-restock="' + escapeHtml(p.id) + '"><i class="ph ph-plus"></i> Restock</button>';
     } else {
-      actionBtn = '<button class="btn btn-sm btn-ghost" data-restock="' + escapeHtml(p.id) + '"><i class="ph ph-plus"></i> Restock</button>';
+      actionBtn = '<button class="btn btn-sm btn-outline" data-restock="' + escapeHtml(p.id) + '"><i class="ph ph-plus"></i> Restock</button>';
     }
 
     const stockColor = stock <= 0 ? '#ef4444' : stock <= rop ? '#f59e0b' : '#10b981';

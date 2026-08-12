@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css/sales.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/phosphor-all.css">
     <meta name="view-transition" content="same-origin">
 </head>
@@ -23,29 +23,32 @@
         <!-- Sidebar -->
         <app-sidebar></app-sidebar>
 
-        <!-- Main -->
+        <!-- Main Content -->
         <main class="main-content">
 
             <!-- Topbar -->
             <app-topbar></app-topbar>
 
-            <!-- Page Content -->
+            <!-- Page Content Inner -->
             <div class="page-inner medium">
 
-                <div class="page-head">
+                <!-- Page Header -->
+                <div class="sales-page-head">
                     <div>
-                        <h2>Sales Entry</h2>
-                        <p>Pick a product and a quantity. The sale is stored, stock is reduced, and the dashboard, forecast, reports and reorder pages update automatically.</p>
+                        <p>Select a product and quantity to log a transaction. Stock levels, analytics, and forecasts update automatically.</p>
                     </div>
                     <div class="actions">
-                        <a class="btn" href="sales-history.html" style="text-decoration: none;"><i class="ph ph-clock-counter-clockwise"></i> Sales History</a>
+                        <a class="btn btn-outline" href="sales-history.html">
+                            <i class="ph ph-clock-counter-clockwise"></i> Sales History
+                        </a>
                     </div>
                 </div>
 
+                <!-- Sales Layout Grid -->
                 <div class="sales-layout">
-                    <!-- Left: New Sale form -->
-                    <div class="panel sales-form-panel">
-                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 18px;">New Sale</h3>
+                    <!-- Left: New Sale Form -->
+                    <div class="sales-form-panel">
+                        <h3><i class="ph ph-plus-circle"></i> Transaction Details</h3>
 
                         <div class="field">
                             <label>Product</label>
@@ -55,6 +58,7 @@
                             <div class="field-error"></div>
                         </div>
 
+                        <!-- Live Product Card -->
                         <div class="product-info-card" id="product-info-card" style="display: none;">
                             <div class="info-grid">
                                 <div><span>Price</span><strong id="info-price">-</strong></div>
@@ -71,36 +75,41 @@
                         </div>
 
                         <div class="field" style="margin-top: 16px;">
-                            <label>Customer</label>
+                            <label>Customer Name / Ref</label>
                             <input id="sale-customer" type="text" placeholder="Walk-in Customer">
                         </div>
 
                         <div class="field" style="margin-top: 16px;">
-                            <label>Date</label>
+                            <label>Date &amp; Time</label>
                             <input id="sale-date" type="datetime-local">
                         </div>
 
+                        <!-- Live Sale Total -->
                         <div class="sale-total" id="sale-total" style="display: none;">
-                            <span>Total</span>
+                            <span>Total Amount</span>
                             <strong id="sale-total-amount">$0.00</strong>
                             <small id="sale-total-profit">Profit $0.00</small>
                         </div>
 
-                        <button class="btn btn-gradient btn-block" id="sale-save"><i class="ph ph-check"></i> Save Sale</button>
+                        <button class="btn btn-gradient btn-block" id="sale-save" style="margin-top: 20px;">
+                            <i class="ph ph-check"></i> Complete &amp; Save Sale
+                        </button>
                     </div>
 
-                    <!-- Right: Today's summary + recent sales -->
-                    <div class="panel">
-                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 18px;">Today's Sales</h3>
+                    <!-- Right: Today's Summary & Recent Feed -->
+                    <div class="sales-summary-panel">
+                        <h3><i class="ph ph-calendar-check"></i> Today's Performance</h3>
                         <div class="today-stats">
                             <div><span>Orders</span><strong id="today-orders">0</strong></div>
                             <div><span>Revenue</span><strong id="today-revenue">$0.00</strong></div>
                             <div><span>Profit</span><strong id="today-profit">$0.00</strong></div>
                         </div>
 
-                        <h3 style="font-size: 15px; color: #fff; margin: 22px 0 12px;">Recent Sales</h3>
+                        <h3 style="font-size: 15px; margin: 24px 0 12px;"><i class="ph ph-clock"></i> Recent Activity</h3>
                         <div id="recent-sales-list" class="recent-sales-list"></div>
-                        <a href="sales-history.html" class="view-all-link" style="margin-top: 12px;">View all sales <i class="ph ph-arrow-right"></i></a>
+                        <a href="sales-history.html" class="view-all-link" style="margin-top: 14px;">
+                            View full sales ledger <i class="ph ph-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
 

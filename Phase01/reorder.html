@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css/reorder.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/phosphor-all.css">
     <meta name="view-transition" content="same-origin">
 </head>
@@ -23,54 +23,83 @@
         <!-- Sidebar -->
         <app-sidebar></app-sidebar>
 
-        <!-- Main -->
+        <!-- Main Content -->
         <main class="main-content">
 
             <!-- Topbar -->
             <app-topbar></app-topbar>
 
-            <!-- Page Content -->
+            <!-- Page Content Inner -->
             <div class="page-inner">
 
-                <div class="page-head">
+                <!-- Page Header -->
+                <div class="reorder-page-head">
                     <div>
-                        <p>Reorder point = (lead time &times; average daily demand) + safety stock. Products at or below their reorder point need attention.</p>
+                        <p>Reorder point = (Lead Time &times; Average Daily Demand) + Safety Stock. Items at or below reorder threshold require restock.</p>
                     </div>
-                    <div class="actions">
-                        <button class="btn" id="reorder-export-btn"><i class="ph ph-download"></i> Export CSV</button>
-                        <a class="btn btn-gradient" href="forecast.html" style="text-decoration: none;"><i class="ph ph-trend-up"></i> Forecast</a>
-                    </div>
-                </div>
-
-                <!-- Alert cards -->
-                <div class="kpi-grid" id="reorder-kpis">
-                    <div class="kpi-card">
-                        <span class="kpi-label"><i class="ph ph-check-circle"></i> Safe stock</span>
-                        <strong class="kpi-value" id="kpi-safe">0</strong>
-                        <small class="kpi-sub">above reorder point</small>
-                    </div>
-                    <div class="kpi-card">
-                        <span class="kpi-label"><i class="ph ph-warning"></i> Low stock</span>
-                        <strong class="kpi-value" id="kpi-low">0</strong>
-                        <small class="kpi-sub">low but not critical</small>
-                    </div>
-                    <div class="kpi-card">
-                        <span class="kpi-label"><i class="ph ph-alarm"></i> Critical</span>
-                        <strong class="kpi-value" id="kpi-critical">0</strong>
-                        <small class="kpi-sub">at or below reorder point</small>
-                    </div>
-                    <div class="kpi-card">
-                        <span class="kpi-label"><i class="ph ph-x-circle"></i> Out of stock</span>
-                        <strong class="kpi-value" id="kpi-out">0</strong>
-                        <small class="kpi-sub">unavailable right now</small>
+                    <div class="reorder-header-actions">
+                        <button class="btn btn-outline" id="reorder-export-btn">
+                            <i class="ph ph-download-simple"></i> Export CSV
+                        </button>
+                        <a class="btn btn-gradient" href="forecast.html">
+                            <i class="ph ph-trend-up"></i> Forecast Engine
+                        </a>
                     </div>
                 </div>
 
-                <!-- Reorder table -->
-                <div class="panel" style="padding: 20px 24px;">
-                    <h3 style="font-size: 16px; color: #fff; margin-bottom: 12px;">Products Needing Reorder</h3>
-                    <div class="table-wrap">
-                        <table class="data-table">
+                <!-- Alert Cards Grid -->
+                <div class="reorder-kpi-grid" id="reorder-kpis">
+                    <!-- Safe Stock -->
+                    <div class="reorder-kpi-card" style="--kpi-accent: linear-gradient(90deg, #34d399, #10b981); --kpi-bg: rgba(52, 211, 153, 0.12); --kpi-color: #34d399; --kpi-glow: rgba(52, 211, 153, 0.2);">
+                        <div class="rdr-kpi-header">
+                            <span class="rdr-kpi-label">Safe Stock</span>
+                            <div class="rdr-kpi-icon"><i class="ph ph-check-circle"></i></div>
+                        </div>
+                        <div class="rdr-kpi-value" id="kpi-safe">0</div>
+                        <div class="rdr-kpi-sub">products above reorder point</div>
+                    </div>
+
+                    <!-- Low Stock -->
+                    <div class="reorder-kpi-card" style="--kpi-accent: linear-gradient(90deg, #fbbf24, #f59e0b); --kpi-bg: rgba(251, 191, 36, 0.12); --kpi-color: #fbbf24; --kpi-glow: rgba(251, 191, 36, 0.2);">
+                        <div class="rdr-kpi-header">
+                            <span class="rdr-kpi-label">Low Stock</span>
+                            <div class="rdr-kpi-icon"><i class="ph ph-warning"></i></div>
+                        </div>
+                        <div class="rdr-kpi-value" id="kpi-low">0</div>
+                        <div class="rdr-kpi-sub">approaching reorder threshold</div>
+                    </div>
+
+                    <!-- Critical -->
+                    <div class="reorder-kpi-card" style="--kpi-accent: linear-gradient(90deg, #f97316, #ea580c); --kpi-bg: rgba(249, 115, 22, 0.12); --kpi-color: #f97316; --kpi-glow: rgba(249, 115, 22, 0.2);">
+                        <div class="rdr-kpi-header">
+                            <span class="rdr-kpi-label">Critical Level</span>
+                            <div class="rdr-kpi-icon"><i class="ph ph-alarm"></i></div>
+                        </div>
+                        <div class="rdr-kpi-value" id="kpi-critical">0</div>
+                        <div class="rdr-kpi-sub">at or below safety buffer</div>
+                    </div>
+
+                    <!-- Out of Stock -->
+                    <div class="reorder-kpi-card" style="--kpi-accent: linear-gradient(90deg, #ef4444, #dc2626); --kpi-bg: rgba(239, 68, 68, 0.12); --kpi-color: #ef4444; --kpi-glow: rgba(239, 68, 68, 0.2);">
+                        <div class="rdr-kpi-header">
+                            <span class="rdr-kpi-label">Out of Stock</span>
+                            <div class="rdr-kpi-icon"><i class="ph ph-x-circle"></i></div>
+                        </div>
+                        <div class="rdr-kpi-value" id="kpi-out">0</div>
+                        <div class="rdr-kpi-sub">zero inventory units remaining</div>
+                    </div>
+                </div>
+
+                <!-- Reorder Table Panel -->
+                <div class="reorder-panel">
+                    <div class="rdr-panel-head">
+                        <div class="rdr-panel-title">
+                            <h3><i class="ph ph-package"></i> Products Needing Reorder</h3>
+                        </div>
+                        <span class="rdr-panel-tag">Restock Alerts</span>
+                    </div>
+                    <div class="rdr-table-wrap">
+                        <table class="rdr-data-table">
                             <thead>
                                 <tr>
                                     <th>Product</th>
@@ -93,7 +122,7 @@
         </main>
     </div>
 
-    <!-- Restock modal -->
+    <!-- Restock Modal -->
     <div class="modal-backdrop" id="restock-modal">
         <div class="modal" style="max-width: 440px;">
             <div class="modal-head">

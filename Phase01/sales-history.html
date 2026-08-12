@@ -8,10 +8,10 @@
 
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/inventory.css">
+    <link rel="stylesheet" href="css/sales-history.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/phosphor-all.css">
     <meta name="view-transition" content="same-origin">
 </head>
@@ -23,59 +23,68 @@
         <!-- Sidebar -->
         <app-sidebar></app-sidebar>
 
-        <!-- Main -->
+        <!-- Main Content -->
         <main class="main-content">
 
             <!-- Topbar -->
             <app-topbar></app-topbar>
 
-            <!-- Page Content -->
+            <!-- Page Content Inner -->
             <div class="page-inner">
 
-                <div class="page-head">
+                <!-- Page Header -->
+                <div class="sh-page-head">
                     <div>
-                        <h2>Sales History</h2>
-                        <p>Every recorded sale. Search, filter by product or date, and export to CSV.</p>
+                        <p>Complete ledger of recorded sales. Search, filter by product/date range, and export to CSV.</p>
                     </div>
-                    <div class="actions">
-                        <button class="btn" id="export-sales-btn"><i class="ph ph-download"></i> Export CSV</button>
-                        <a class="btn btn-gradient" href="sales.html" style="text-decoration: none;"><i class="ph ph-plus"></i> New Sale</a>
+                    <div class="sh-header-actions">
+                        <button class="btn btn-outline" id="export-sales-btn">
+                            <i class="ph ph-download-simple"></i> Export CSV
+                        </button>
+                        <a class="btn btn-gradient" href="sales.html">
+                            <i class="ph ph-plus"></i> New Sale Entry
+                        </a>
                     </div>
                 </div>
 
-                <!-- Toolbar -->
-                <div class="toolbar">
+                <!-- Filters Toolbar -->
+                <div class="sh-toolbar">
                     <div class="search-field">
                         <i class="ph ph-magnifying-glass"></i>
-                        <input id="sales-search" type="text" placeholder="Search product, customer or id...">
+                        <input id="sales-search" type="text" placeholder="Search product, customer, or transaction ID...">
                     </div>
+
                     <span class="toolbar-label">Product</span>
                     <select id="filter-product"><option value="">All Products</option></select>
+
                     <span class="toolbar-label">From</span>
                     <input id="filter-from" type="date">
+
                     <span class="toolbar-label">To</span>
                     <input id="filter-to" type="date">
                 </div>
 
-                <!-- Sales table -->
-                <div class="table-wrap">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th class="sortable" data-sort="date">Date</th>
-                                <th>Product</th>
-                                <th>Customer</th>
-                                <th class="num sortable" data-sort="quantity">Qty</th>
-                                <th class="num sortable" data-sort="sellingPrice">Price</th>
-                                <th class="num sortable" data-sort="profit">Profit</th>
-                                <th class="num sortable" data-sort="sellingPrice">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody id="sales-tbody"></tbody>
-                    </table>
-                </div>
+                <!-- Sales Table Panel -->
+                <div class="sh-panel">
+                    <div class="sh-table-wrap">
+                        <table class="sh-data-table data-table">
+                            <thead>
+                                <tr>
+                                    <th class="sortable" data-sort="date">Date</th>
+                                    <th>Product</th>
+                                    <th>Customer</th>
+                                    <th class="num sortable" data-sort="quantity">Qty</th>
+                                    <th class="num sortable" data-sort="sellingPrice">Price</th>
+                                    <th class="num sortable" data-sort="profit">Profit</th>
+                                    <th class="num sortable" data-sort="sellingPrice">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sales-tbody"></tbody>
+                        </table>
+                    </div>
 
-                <div class="pagination" id="sales-pagination"></div>
+                    <div class="pagination" id="sales-pagination" style="margin-top: 16px;"></div>
+                </div>
 
             </div>
         </main>
