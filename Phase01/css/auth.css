@@ -31,6 +31,29 @@
   text-align: center;
 }
 
+.auth-logo-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.auth-logo-link:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.auth-logo .logo-icon {
+  width: 54px;
+  height: 54px;
+  filter: drop-shadow(0 4px 16px rgba(14, 165, 233, 0.45));
+  animation: logo-breathe 4s ease-in-out infinite;
+  margin-bottom: 2px;
+}
+
 .auth-logo .logo-badge {
   width: 54px;
   height: 54px;
