@@ -12,7 +12,7 @@
     <script src="js/chart.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/phosphor-all.css">
     <meta name="view-transition" content="same-origin">
 </head>
@@ -33,81 +33,124 @@
             <!-- Page Content -->
             <div class="page-inner">
 
-                <div class="page-head">
+                <!-- Page Header -->
+                <div class="reports-page-head">
                     <div>
-                        <h2>Reports</h2>
-                        <p>Business performance over a date range. Everything is derived live from recorded sales.</p>
+                        <p>Track business performance, profit margins, and sales trends over custom date ranges.</p>
                     </div>
                     <div class="actions">
-                        <button class="btn" id="reports-export-btn"><i class="ph ph-download"></i> Export CSV</button>
+                        <button class="btn-export-gradient" id="reports-export-btn">
+                            <i class="ph ph-download-simple"></i> Export CSV Report
+                        </button>
                     </div>
                 </div>
 
-                <!-- Date range -->
-                <div class="toolbar">
-                    <span class="toolbar-label">From</span>
-                    <input id="reports-from" type="date">
-                    <span class="toolbar-label">To</span>
-                    <input id="reports-to" type="date">
-                    <span class="toolbar-spacer"></span>
-                    <button class="btn btn-sm" id="reports-range-30">Last 30 days</button>
-                    <button class="btn btn-sm" id="reports-range-90">Last 90 days</button>
-                    <button class="btn btn-sm" id="reports-range-all">All time</button>
-                </div>
+                <!-- Date Range Toolbar -->
+                <div class="reports-toolbar">
+                    <div class="toolbar-group">
+                        <span class="toolbar-label"><i class="ph ph-calendar"></i> From</span>
+                        <input id="reports-from" type="date">
+                    </div>
+                    <div class="toolbar-group">
+                        <span class="toolbar-label">To</span>
+                        <input id="reports-to" type="date">
+                    </div>
 
-                <!-- Summary KPI cards -->
-                <div class="kpi-grid" id="reports-kpis">
-                    <div class="kpi-card">
-                        <span class="kpi-label"><i class="ph ph-currency-dollar"></i> Revenue</span>
-                        <strong class="kpi-value" id="rpt-revenue">$0</strong>
-                        <small class="kpi-sub">gross sales in range</small>
-                    </div>
-                    <div class="kpi-card">
-                        <span class="kpi-label"><i class="ph ph-trend-up"></i> Profit</span>
-                        <strong class="kpi-value" id="rpt-profit">$0</strong>
-                        <small class="kpi-sub">revenue minus cost</small>
-                    </div>
-                    <div class="kpi-card">
-                        <span class="kpi-label"><i class="ph ph-receipt"></i> Orders</span>
-                        <strong class="kpi-value" id="rpt-orders">0</strong>
-                        <small class="kpi-sub">sales transactions</small>
-                    </div>
-                    <div class="kpi-card">
-                        <span class="kpi-label"><i class="ph ph-boxes"></i> Units sold</span>
-                        <strong class="kpi-value" id="rpt-units">0</strong>
-                        <small class="kpi-sub">total quantity</small>
-                    </div>
-                    <div class="kpi-card">
-                        <span class="kpi-label"><i class="ph ph-percent"></i> Avg order value</span>
-                        <strong class="kpi-value" id="rpt-avg">$0</strong>
-                        <small class="kpi-sub">revenue / orders</small>
+                    <div class="toolbar-presets">
+                        <button class="range-btn active" id="reports-range-30">30 Days</button>
+                        <button class="range-btn" id="reports-range-90">90 Days</button>
+                        <button class="range-btn" id="reports-range-all">All Time</button>
                     </div>
                 </div>
 
-                <div class="reports-layout">
-                    <!-- Revenue trend -->
-                    <div class="panel">
-                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 14px;">Revenue Trend</h3>
-                        <div class="chart-box" style="height: 260px;">
+                <!-- Summary KPI Cards Grid -->
+                <div class="reports-kpi-grid" id="reports-kpis">
+                    <!-- Revenue -->
+                    <div class="reports-kpi-card" style="--kpi-accent: linear-gradient(90deg, #38bdf8, #0ea5e9); --kpi-bg: rgba(56, 189, 248, 0.12); --kpi-color: #38bdf8; --kpi-glow: rgba(56, 189, 248, 0.2);">
+                        <div class="kpi-header">
+                            <span class="kpi-label-text">Total Revenue</span>
+                            <div class="kpi-icon-wrap"><i class="ph ph-currency-dollar"></i></div>
+                        </div>
+                        <div class="kpi-main-val" id="rpt-revenue">$0</div>
+                        <div class="kpi-sub-text"><i class="ph ph-info"></i> Gross sales in selected range</div>
+                    </div>
+
+                    <!-- Profit -->
+                    <div class="reports-kpi-card" style="--kpi-accent: linear-gradient(90deg, #34d399, #10b981); --kpi-bg: rgba(52, 211, 153, 0.12); --kpi-color: #34d399; --kpi-glow: rgba(52, 211, 153, 0.2);">
+                        <div class="kpi-header">
+                            <span class="kpi-label-text">Net Profit</span>
+                            <div class="kpi-icon-wrap"><i class="ph ph-trend-up"></i></div>
+                        </div>
+                        <div class="kpi-main-val" id="rpt-profit">$0</div>
+                        <div class="kpi-sub-text"><i class="ph ph-arrow-up-right"></i> Revenue minus product cost</div>
+                    </div>
+
+                    <!-- Orders -->
+                    <div class="reports-kpi-card" style="--kpi-accent: linear-gradient(90deg, #818cf8, #6366f1); --kpi-bg: rgba(129, 140, 248, 0.12); --kpi-color: #818cf8; --kpi-glow: rgba(129, 140, 248, 0.2);">
+                        <div class="kpi-header">
+                            <span class="kpi-label-text">Total Orders</span>
+                            <div class="kpi-icon-wrap"><i class="ph ph-receipt"></i></div>
+                        </div>
+                        <div class="kpi-main-val" id="rpt-orders">0</div>
+                        <div class="kpi-sub-text"><i class="ph ph-shopping-bag"></i> Sales transactions</div>
+                    </div>
+
+                    <!-- Units Sold -->
+                    <div class="reports-kpi-card" style="--kpi-accent: linear-gradient(90deg, #c084fc, #a855f7); --kpi-bg: rgba(192, 132, 252, 0.12); --kpi-color: #c084fc; --kpi-glow: rgba(192, 132, 252, 0.2);">
+                        <div class="kpi-header">
+                            <span class="kpi-label-text">Units Sold</span>
+                            <div class="kpi-icon-wrap"><i class="ph ph-boxes"></i></div>
+                        </div>
+                        <div class="kpi-main-val" id="rpt-units">0</div>
+                        <div class="kpi-sub-text"><i class="ph ph-package"></i> Total item quantity</div>
+                    </div>
+
+                    <!-- Avg Order Value -->
+                    <div class="reports-kpi-card" style="--kpi-accent: linear-gradient(90deg, #fbbf24, #f59e0b); --kpi-bg: rgba(251, 191, 36, 0.12); --kpi-color: #fbbf24; --kpi-glow: rgba(251, 191, 36, 0.2);">
+                        <div class="kpi-header">
+                            <span class="kpi-label-text">Avg Order Value</span>
+                            <div class="kpi-icon-wrap"><i class="ph ph-scales"></i></div>
+                        </div>
+                        <div class="kpi-main-val" id="rpt-avg">$0</div>
+                        <div class="kpi-sub-text"><i class="ph ph-calculator"></i> Revenue / Orders</div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="reports-grid-layout">
+                    <!-- Daily Revenue Trend Chart -->
+                    <div class="reports-panel">
+                        <div class="panel-head">
+                            <h3><i class="ph ph-chart-bar"></i> Daily Revenue Trend</h3>
+                            <span class="panel-tag">Timeline</span>
+                        </div>
+                        <div class="chart-container-box" style="height: 270px;">
                             <canvas id="chart-reports-trend"></canvas>
                         </div>
                     </div>
 
-                    <!-- Sales by category -->
-                    <div class="panel">
-                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 14px;">Sales by Category</h3>
-                        <div class="chart-box" style="height: 260px;">
+                    <!-- Category Breakdown Donut Chart -->
+                    <div class="reports-panel">
+                        <div class="panel-head">
+                            <h3><i class="ph ph-pie-chart"></i> Revenue by Category</h3>
+                            <span class="panel-tag">Share</span>
+                        </div>
+                        <div class="chart-container-box" style="height: 270px;">
                             <canvas id="chart-reports-category"></canvas>
                         </div>
                     </div>
                 </div>
 
-                <div class="reports-layout">
-                    <!-- Monthly breakdown -->
-                    <div class="panel">
-                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 12px;">Monthly Breakdown</h3>
-                        <div class="table-wrap">
-                            <table class="data-table">
+                <!-- Data Tables Section -->
+                <div class="reports-grid-layout">
+                    <!-- Monthly Financial Breakdown -->
+                    <div class="reports-panel">
+                        <div class="panel-head">
+                            <h3><i class="ph ph-calendar-blank"></i> Monthly Breakdown</h3>
+                            <span class="panel-tag">Summary</span>
+                        </div>
+                        <div class="reports-table-wrap">
+                            <table class="reports-data-table">
                                 <thead>
                                     <tr>
                                         <th>Month</th>
@@ -122,11 +165,14 @@
                         </div>
                     </div>
 
-                    <!-- Top products -->
-                    <div class="panel">
-                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 12px;">Top Products</h3>
-                        <div class="table-wrap">
-                            <table class="data-table">
+                    <!-- Top Performing Products -->
+                    <div class="reports-panel">
+                        <div class="panel-head">
+                            <h3><i class="ph ph-trophy"></i> Top Products</h3>
+                            <span class="panel-tag">Ranking</span>
+                        </div>
+                        <div class="reports-table-wrap">
+                            <table class="reports-data-table">
                                 <thead>
                                     <tr>
                                         <th>Product</th>

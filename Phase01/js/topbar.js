@@ -125,6 +125,9 @@ class AppTopbar extends HTMLElement {
             if (typeof window.renderDashboard === 'function') {
                 window.renderDashboard();
             }
+            if (typeof window.renderAll === 'function') {
+                window.renderAll();
+            }
         });
     }
 

@@ -12,7 +12,7 @@ if (typeof getCurrentUser === 'function' && !getCurrentUser()) {
 const sidebarHTML = `
 <aside class="sidebar">
     <div class="sidebar-logo">
-        <a href="index.html" class="sidebar-logo-link" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;">
+        <a href="dashboard.html" class="sidebar-logo-link" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;">
             <div class="logo-icon" title="InventoryIQ">
                 <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>

@@ -190,3 +190,19 @@ function toCSV(rows) {
   }
   return lines.join('\r\n');
 }
+
+// Global helper: automatically open native calendar dialog when clicking on any <input type="date">
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('input[type="date"]').forEach(function (input) {
+    input.style.cursor = 'pointer';
+    input.addEventListener('click', function (e) {
+      try {
+        if (typeof e.target.showPicker === 'function') {
+          e.target.showPicker();
+        }
+      } catch (err) {
+        // Ignored
+      }
+    });
+  });
+});

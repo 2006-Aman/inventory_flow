@@ -19,6 +19,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function wireEvents() {
+  ['reports-from', 'reports-to'].forEach(function (id) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.style.cursor = 'pointer';
+      el.addEventListener('click', function (e) {
+        try {
+          if (typeof e.target.showPicker === 'function') {
+            e.target.showPicker();
+          }
+        } catch (err) {
+          // Ignored if browser prevents programmatic picker call
+        }
+      });
+    }
+  });
+
   document.getElementById('reports-from').addEventListener('change', function (e) {
     reportsState.from = e.target.value || null;
     renderAll();
@@ -27,9 +43,16 @@ function wireEvents() {
     reportsState.to = e.target.value || null;
     renderAll();
   });
-  document.getElementById('reports-range-30').addEventListener('click', function () { applyRange(30); });
-  document.getElementById('reports-range-90').addEventListener('click', function () { applyRange(90); });
+  document.getElementById('reports-range-30').addEventListener('click', function () {
+    updateActiveRangeBtn('reports-range-30');
+    applyRange(30);
+  });
+  document.getElementById('reports-range-90').addEventListener('click', function () {
+    updateActiveRangeBtn('reports-range-90');
+    applyRange(90);
+  });
   document.getElementById('reports-range-all').addEventListener('click', function () {
+    updateActiveRangeBtn('reports-range-all');
     reportsState.from = null;
     reportsState.to = null;
     document.getElementById('reports-from').value = '';
@@ -37,6 +60,12 @@ function wireEvents() {
     renderAll();
   });
   document.getElementById('reports-export-btn').addEventListener('click', exportReportsCSV);
+}
+
+function updateActiveRangeBtn(activeId) {
+  document.querySelectorAll('.range-btn').forEach(btn => btn.classList.remove('active'));
+  const activeBtn = document.getElementById(activeId);
+  if (activeBtn) activeBtn.classList.add('active');
 }
 
 function applyRange(days) {
@@ -83,11 +112,20 @@ function renderAll() {
   renderMonthlyTable(sales);
   renderTopProducts(sales);
 }
+window.renderAll = renderAll;
 
 // Daily revenue line chart
 function renderTrendChart(sales) {
   const canvas = document.getElementById('chart-reports-trend');
   if (!canvas) return;
+
+  const isLight = document.body.classList.contains('theme-light');
+  const textColor = isLight ? '#475569' : '#64748b';
+  const gridColor = isLight ? 'rgba(203, 213, 225, 0.5)' : 'rgba(148, 163, 184, 0.08)';
+  const tooltipBg = isLight ? '#ffffff' : '#0b1220';
+  const tooltipTitle = isLight ? '#0f172a' : '#ffffff';
+  const tooltipBody = isLight ? '#475569' : '#94a3b8';
+  const tooltipBorder = isLight ? '#e2e8f0' : 'rgba(148, 163, 184, 0.2)';
 
   const buckets = {};
   for (const s of sales) {
@@ -106,7 +144,7 @@ function renderTrendChart(sales) {
       datasets: [{
         label: 'Revenue',
         data: keys.map(function (k) { return buckets[k]; }),
-        backgroundColor: 'rgba(56, 189, 248, 0.7)',
+        backgroundColor: isLight ? 'rgba(2, 132, 199, 0.85)' : 'rgba(56, 189, 248, 0.7)',
         borderRadius: 4
       }]
     },
@@ -116,16 +154,16 @@ function renderTrendChart(sales) {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: '#0b1220',
-          borderColor: 'rgba(148, 163, 184, 0.2)',
+          backgroundColor: tooltipBg,
+          borderColor: tooltipBorder,
           borderWidth: 1,
-          titleColor: '#fff',
-          bodyColor: '#94a3b8'
+          titleColor: tooltipTitle,
+          bodyColor: tooltipBody
         }
       },
       scales: {
-        x: { grid: { display: false }, ticks: { color: '#64748b', maxRotation: 60 } },
-        y: { grid: { color: 'rgba(148, 163, 184, 0.08)' }, ticks: { color: '#64748b' } }
+        x: { grid: { display: false }, ticks: { color: textColor, maxRotation: 60 } },
+        y: { grid: { color: gridColor }, ticks: { color: textColor } }
       }
     }
   });
@@ -135,6 +173,13 @@ function renderTrendChart(sales) {
 function renderCategoryChart(sales) {
   const canvas = document.getElementById('chart-reports-category');
   if (!canvas) return;
+
+  const isLight = document.body.classList.contains('theme-light');
+  const legendColor = isLight ? '#334155' : '#94a3b8';
+  const tooltipBg = isLight ? '#ffffff' : '#0b1220';
+  const tooltipTitle = isLight ? '#0f172a' : '#ffffff';
+  const tooltipBody = isLight ? '#475569' : '#94a3b8';
+  const tooltipBorder = isLight ? '#e2e8f0' : 'rgba(148, 163, 184, 0.2)';
 
   const catMap = {};
   for (const p of getProducts()) catMap[String(p.id)] = p.category || 'Uncategorized';
@@ -161,13 +206,13 @@ function renderCategoryChart(sales) {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: { position: 'right', labels: { color: '#94a3b8', boxWidth: 12, padding: 12, font: { size: 11 } } },
+        legend: { position: 'right', labels: { color: legendColor, boxWidth: 12, padding: 12, font: { size: 11 } } },
         tooltip: {
-          backgroundColor: '#0b1220',
-          borderColor: 'rgba(148, 163, 184, 0.2)',
+          backgroundColor: tooltipBg,
+          borderColor: tooltipBorder,
           borderWidth: 1,
-          titleColor: '#fff',
-          bodyColor: '#94a3b8'
+          titleColor: tooltipTitle,
+          bodyColor: tooltipBody
         }
       }
     }
