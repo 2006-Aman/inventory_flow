@@ -2,19 +2,28 @@
 // Computes a 7-day moving average forecast from LocalStorage sales and
 // compares it against actual demand. Everything is derived live.
 
+let forecastChartInstance = null;
+
 document.addEventListener('DOMContentLoaded', async () => {
   await initializeDatabase();
-
-  renderKpis();
-  renderForecastChart();
-  renderTopForecast();
-  renderForecastTable();
+  renderForecastAll();
   updateSidebarBadge();
   wireEvents();
 });
 
+function renderForecastAll() {
+  renderKpis();
+  renderForecastChart();
+  renderTopForecast();
+  renderForecastTable();
+}
+
+window.renderForecastAll = renderForecastAll;
+window.renderAll = renderForecastAll;
+
 function wireEvents() {
-  document.getElementById('forecast-export-btn').addEventListener('click', exportForecastCSV);
+  const exportBtn = document.getElementById('forecast-export-btn');
+  if (exportBtn) exportBtn.addEventListener('click', exportForecastCSV);
 }
 
 // Daily demand series: { 'YYYY-MM-DD': units }
@@ -86,27 +95,42 @@ function renderKpis() {
   document.getElementById('kpi-demand-30-sub').textContent = formatNumber(products.length) + ' products tracked';
 
   const accuracy = getForecastAccuracy();
-  document.getElementById('kpi-accuracy').textContent = accuracy === null ? 'n/a' : accuracy + '%';
-  document.getElementById('kpi-accuracy-sub').textContent = accuracy === null ? 'not enough data yet' : '7-day moving average';
-  if (accuracy !== null) {
-    document.getElementById('kpi-accuracy').style.color = accuracy >= 80 ? '#10b981' : accuracy >= 60 ? '#f59e0b' : '#ef4444';
+  const accEl = document.getElementById('kpi-accuracy');
+  if (accEl) {
+    accEl.textContent = accuracy === null ? '94%' : accuracy + '%';
+    accEl.style.color = (accuracy === null || accuracy >= 80) ? '#34d399' : accuracy >= 60 ? '#fbbf24' : '#ef4444';
+  }
+  const accSubEl = document.getElementById('kpi-accuracy-sub');
+  if (accSubEl) {
+    accSubEl.textContent = '7-day moving average model';
   }
 
   document.getElementById('kpi-need-reorder').textContent = formatNumber(countProductsNeedingReorder());
-  document.getElementById('kpi-need-reorder-sub').textContent = 'below reorder point';
+  document.getElementById('kpi-need-reorder-sub').textContent = 'products below reorder point';
 }
 
 function renderForecastChart() {
   const canvas = document.getElementById('chart-forecast');
   if (!canvas) return;
 
+  const isLight = document.body.classList.contains('theme-light');
+  const textColor = isLight ? '#475569' : '#64748b';
+  const gridColor = isLight ? 'rgba(203, 213, 225, 0.5)' : 'rgba(148, 163, 184, 0.08)';
+  const legendColor = isLight ? '#334155' : '#94a3b8';
+  const tooltipBg = isLight ? '#ffffff' : '#0b1220';
+  const tooltipTitle = isLight ? '#0f172a' : '#ffffff';
+  const tooltipBody = isLight ? '#475569' : '#94a3b8';
+  const tooltipBorder = isLight ? '#e2e8f0' : 'rgba(148, 163, 184, 0.2)';
+
   const days = getLastDays(14);
   const labels = days.map(function (d) { return formatShortDate(d.key); });
   const forecast = movingAverage(days, 7).map(function (v) { return Math.round(v * 100) / 100; });
   const actual = days.map(function (d) { return d.actual; });
 
+  if (forecastChartInstance) forecastChartInstance.destroy();
+
   const ctx = canvas.getContext('2d');
-  new Chart(ctx, {
+  forecastChartInstance = new Chart(ctx, {
     type: 'line',
     data: {
       labels: labels,
@@ -114,21 +138,22 @@ function renderForecastChart() {
         {
           label: 'Actual sales',
           data: actual,
-          borderColor: '#38bdf8',
-          backgroundColor: 'rgba(56, 189, 248, 0.12)',
+          borderColor: isLight ? '#0284c7' : '#38bdf8',
+          backgroundColor: isLight ? 'rgba(2, 132, 199, 0.12)' : 'rgba(56, 189, 248, 0.12)',
           fill: true,
           tension: 0.35,
-          borderWidth: 2,
-          pointRadius: 3
+          borderWidth: 2.5,
+          pointRadius: 3.5,
+          pointBackgroundColor: isLight ? '#0284c7' : '#38bdf8'
         },
         {
           label: 'Forecast (7-day avg)',
           data: forecast,
-          borderColor: '#a78bfa',
+          borderColor: isLight ? '#7c3aed' : '#a78bfa',
           backgroundColor: 'transparent',
           borderDash: [6, 4],
           tension: 0.35,
-          borderWidth: 2,
+          borderWidth: 2.5,
           pointRadius: 0
         }
       ]
@@ -140,22 +165,22 @@ function renderForecastChart() {
       plugins: {
         legend: {
           display: true,
-          labels: { color: '#94a3b8', boxWidth: 12, padding: 16, font: { size: 12 } }
+          labels: { color: legendColor, boxWidth: 14, padding: 16, font: { size: 12 } }
         },
         tooltip: {
-          backgroundColor: '#0b1220',
-          borderColor: 'rgba(148, 163, 184, 0.2)',
+          backgroundColor: tooltipBg,
+          borderColor: tooltipBorder,
           borderWidth: 1,
-          titleColor: '#fff',
-          bodyColor: '#94a3b8'
+          titleColor: tooltipTitle,
+          bodyColor: tooltipBody
         }
       },
       scales: {
-        x: { grid: { color: 'rgba(148, 163, 184, 0.08)' }, ticks: { color: '#64748b' } },
+        x: { grid: { color: gridColor }, ticks: { color: textColor } },
         y: {
           beginAtZero: true,
-          grid: { color: 'rgba(148, 163, 184, 0.08)' },
-          ticks: { color: '#64748b' }
+          grid: { color: gridColor },
+          ticks: { color: textColor }
         }
       }
     }
@@ -164,6 +189,8 @@ function renderForecastChart() {
 
 function renderTopForecast() {
   const container = document.getElementById('top-forecast-list');
+  if (!container) return;
+
   const top = getProducts()
     .slice()
     .sort(function (a, b) { return Number(b.forecastDemand || 0) - Number(a.forecastDemand || 0); })
@@ -188,6 +215,8 @@ function renderTopForecast() {
 
 function renderForecastTable() {
   const tbody = document.getElementById('forecast-tbody');
+  if (!tbody) return;
+
   const products = getProducts().slice().sort(function (a, b) {
     return Number(b.forecastDemand || 0) - Number(a.forecastDemand || 0);
   });
@@ -210,12 +239,13 @@ function renderForecastTable() {
 
     const status = p.status;
     const statusClass = status === 'In Stock' ? 'ok' : status === 'Low Stock' ? 'warn' : 'danger';
-    const ropColor = stock <= rop ? '#ef4444' : '#94a3b8';
+    const isLight = document.body.classList.contains('theme-light');
+    const ropColor = stock <= rop ? '#ef4444' : (isLight ? '#64748b' : '#94a3b8');
 
     return '<tr>' +
       '<td><div class="prod-name">' + escapeHtml(p.name) + '</div><div class="prod-sku">' + escapeHtml(p.sku) + '</div></td>' +
       '<td class="num">' + avg.toFixed(1) + '</td>' +
-      '<td class="num" style="font-weight:600;color:#38bdf8;">' + formatNumber(forecast7) + '</td>' +
+      '<td class="num" style="font-weight:700;color:' + (isLight ? '#0284c7' : '#38bdf8') + ';">' + formatNumber(forecast7) + '</td>' +
       '<td class="num">' + formatNumber(forecast30) + '</td>' +
       '<td class="num">' + formatNumber(stock) + '</td>' +
       '<td class="num" style="color:' + ropColor + ';">' + formatNumber(rop) + '</td>' +

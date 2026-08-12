@@ -12,7 +12,7 @@
     <script src="js/chart.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/phosphor-all.css">
     <meta name="view-transition" content="same-origin">
 </head>
@@ -24,73 +24,113 @@
         <!-- Sidebar -->
         <app-sidebar></app-sidebar>
 
-        <!-- Main -->
+        <!-- Main Content -->
         <main class="main-content">
 
             <!-- Topbar -->
             <app-topbar></app-topbar>
 
-            <!-- Page Content -->
+            <!-- Page Content Inner -->
             <div class="page-inner">
 
-                <div class="page-head">
+                <!-- Page Header -->
+                <div class="forecast-page-head">
                     <div>
-                        <h2>Demand Forecast</h2>
-                        <p>7-day moving average demand per product, projected forward, compared against actual sales.</p>
+                        <p>7-day moving average projections, stockout probability, and inventory reorder planning.</p>
                     </div>
-                    <div class="actions">
-                        <button class="btn" id="forecast-export-btn"><i class="ph ph-download"></i> Export CSV</button>
-                        <a class="btn btn-gradient" href="reorder.html" style="text-decoration: none;"><i class="ph ph-package"></i> Reorder</a>
-                    </div>
-                </div>
-
-                <!-- Forecast KPI cards -->
-                <div class="kpi-grid" id="forecast-kpis">
-                    <div class="kpi-card">
-                        <span class="kpi-label"><i class="ph ph-trend-up"></i> Next 7 days demand</span>
-                        <strong class="kpi-value" id="kpi-demand-7">0</strong>
-                        <small class="kpi-sub" id="kpi-demand-7-sub">units projected</small>
-                    </div>
-                    <div class="kpi-card">
-                        <span class="kpi-label"><i class="ph ph-calendar-blank"></i> Next 30 days demand</span>
-                        <strong class="kpi-value" id="kpi-demand-30">0</strong>
-                        <small class="kpi-sub" id="kpi-demand-30-sub">units projected</small>
-                    </div>
-                    <div class="kpi-card">
-                        <span class="kpi-label"><i class="ph ph-target"></i> Forecast accuracy</span>
-                        <strong class="kpi-value" id="kpi-accuracy">-</strong>
-                        <small class="kpi-sub" id="kpi-accuracy-sub">7-day forecast vs actual</small>
-                    </div>
-                    <div class="kpi-card">
-                        <span class="kpi-label"><i class="ph ph-warning-circle"></i> Need reorder</span>
-                        <strong class="kpi-value" id="kpi-need-reorder">0</strong>
-                        <small class="kpi-sub" id="kpi-need-reorder-sub">products below reorder point</small>
+                    <div class="forecast-header-actions">
+                        <button class="btn-outline-glow" id="forecast-export-btn">
+                            <i class="ph ph-download-simple"></i> Export CSV
+                        </button>
+                        <a class="btn-export-gradient" href="reorder.html">
+                            <i class="ph ph-package"></i> Reorder Alerts
+                        </a>
                     </div>
                 </div>
 
+                <!-- Forecast KPI Cards Grid -->
+                <div class="forecast-kpi-grid" id="forecast-kpis">
+                    <!-- Next 7 Days Demand -->
+                    <div class="forecast-kpi-card" style="--kpi-accent: linear-gradient(90deg, #38bdf8, #0ea5e9); --kpi-bg: rgba(56, 189, 248, 0.12); --kpi-color: #38bdf8; --kpi-glow: rgba(56, 189, 248, 0.2);">
+                        <div class="fct-kpi-header">
+                            <span class="fct-kpi-label">Next 7 Days Demand</span>
+                            <div class="fct-kpi-icon"><i class="ph ph-trend-up"></i></div>
+                        </div>
+                        <div class="fct-kpi-value" id="kpi-demand-7">0</div>
+                        <div class="fct-kpi-sub" id="kpi-demand-7-sub">units projected</div>
+                    </div>
+
+                    <!-- Next 30 Days Demand -->
+                    <div class="forecast-kpi-card" style="--kpi-accent: linear-gradient(90deg, #818cf8, #6366f1); --kpi-bg: rgba(129, 140, 248, 0.12); --kpi-color: #818cf8; --kpi-glow: rgba(129, 140, 248, 0.2);">
+                        <div class="fct-kpi-header">
+                            <span class="fct-kpi-label">Next 30 Days Demand</span>
+                            <div class="fct-kpi-icon"><i class="ph ph-calendar-blank"></i></div>
+                        </div>
+                        <div class="fct-kpi-value" id="kpi-demand-30">0</div>
+                        <div class="fct-kpi-sub" id="kpi-demand-30-sub">units projected</div>
+                    </div>
+
+                    <!-- Forecast Accuracy -->
+                    <div class="forecast-kpi-card" style="--kpi-accent: linear-gradient(90deg, #34d399, #10b981); --kpi-bg: rgba(52, 211, 153, 0.12); --kpi-color: #34d399; --kpi-glow: rgba(52, 211, 153, 0.2);">
+                        <div class="fct-kpi-header">
+                            <span class="fct-kpi-label">Forecast Accuracy</span>
+                            <div class="fct-kpi-icon"><i class="ph ph-target"></i></div>
+                        </div>
+                        <div class="fct-kpi-value" id="kpi-accuracy">-</div>
+                        <div class="fct-kpi-sub" id="kpi-accuracy-sub">7-day moving avg model</div>
+                    </div>
+
+                    <!-- Need Reorder -->
+                    <div class="forecast-kpi-card" style="--kpi-accent: linear-gradient(90deg, #fbbf24, #f59e0b); --kpi-bg: rgba(251, 191, 36, 0.12); --kpi-color: #fbbf24; --kpi-glow: rgba(251, 191, 36, 0.2);">
+                        <div class="fct-kpi-header">
+                            <span class="fct-kpi-label">Items Needing Reorder</span>
+                            <div class="fct-kpi-icon"><i class="ph ph-warning-circle"></i></div>
+                        </div>
+                        <div class="fct-kpi-value" id="kpi-need-reorder">0</div>
+                        <div class="fct-kpi-sub" id="kpi-need-reorder-sub">products below reorder point</div>
+                    </div>
+                </div>
+
+                <!-- Forecast Panels Grid -->
                 <div class="forecast-layout">
-                    <!-- Main chart -->
-                    <div class="panel">
-                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 6px;">Forecast vs Actual</h3>
-                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Actual sales per day vs the 7-day moving average forecast (last 14 days).</p>
-                        <div class="chart-box" style="height: 300px;">
+                    <!-- Forecast vs Actual Chart -->
+                    <div class="forecast-panel">
+                        <div class="fct-panel-head">
+                            <div class="fct-panel-title">
+                                <h3><i class="ph ph-chart-line-up"></i> Forecast vs. Actual Sales</h3>
+                                <p>Actual sales vs. the 7-day moving average forecast model (last 14 days).</p>
+                            </div>
+                            <span class="fct-panel-tag">Moving Avg</span>
+                        </div>
+                        <div class="fct-chart-box" style="height: 290px;">
                             <canvas id="chart-forecast"></canvas>
                         </div>
                     </div>
 
-                    <!-- Top forecast products -->
-                    <div class="panel">
-                        <h3 style="font-size: 16px; color: #fff; margin-bottom: 6px;">Top Forecasted Products</h3>
-                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Highest projected demand for the next 7 days.</p>
+                    <!-- Top Forecasted Products -->
+                    <div class="forecast-panel">
+                        <div class="fct-panel-head">
+                            <div class="fct-panel-title">
+                                <h3><i class="ph ph-trophy"></i> Highest Demand Products</h3>
+                                <p>Top items ranked by projected 7-day demand volume.</p>
+                            </div>
+                            <span class="fct-panel-tag">Top 8</span>
+                        </div>
                         <div id="top-forecast-list" class="forecast-rank-list"></div>
                     </div>
                 </div>
 
-                <!-- Forecast table -->
-                <div class="panel" style="padding: 20px 24px;">
-                    <h3 style="font-size: 16px; color: #fff; margin-bottom: 12px;">Product Forecast Detail</h3>
-                    <div class="table-wrap">
-                        <table class="data-table">
+                <!-- Product Forecast Detail Table -->
+                <div class="forecast-panel">
+                    <div class="fct-panel-head">
+                        <div class="fct-panel-title">
+                            <h3><i class="ph ph-list-bullets"></i> Product Forecast Breakdown</h3>
+                            <p>Detailed demand velocity, Days Until Stockout, and reorder status per product.</p>
+                        </div>
+                        <span class="fct-panel-tag">Catalog Detail</span>
+                    </div>
+                    <div class="fct-table-wrap">
+                        <table class="fct-data-table">
                             <thead>
                                 <tr>
                                     <th>Product</th>
@@ -99,7 +139,7 @@
                                     <th class="num">Forecast (30d)</th>
                                     <th class="num">Current Stock</th>
                                     <th class="num">Reorder Point</th>
-                                    <th class="num">Days Until Stockout</th>
+                                    <th class="num">Days to Stockout</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
