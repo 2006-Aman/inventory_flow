@@ -134,8 +134,43 @@ function escapeHtml(text) {
     .replace(/'/g, '&#39;');
 }
 
+// Store a toast message in sessionStorage so it can survive page navigation
+function setPendingToast(message, type) {
+  try {
+    sessionStorage.setItem('pendingToast', JSON.stringify({ message: message, type: type, time: Date.now() }));
+  } catch (e) {}
+}
+
+function checkPendingToast() {
+  try {
+    const pending = sessionStorage.getItem('pendingToast');
+    if (pending) {
+      sessionStorage.removeItem('pendingToast');
+      const data = JSON.parse(pending);
+      if (data && data.message && (Date.now() - (data.time || 0) < 10000)) {
+        showToast(data.message, data.type || 'info', true);
+      }
+    }
+  } catch (e) {}
+}
+
 // Show a small toast notification at the bottom of the page
-function showToast(message, type) {
+function showToast(message, type, skipSave) {
+  if (!skipSave) {
+    setPendingToast(message, type);
+    setTimeout(function () {
+      try {
+        const pending = sessionStorage.getItem('pendingToast');
+        if (pending) {
+          const data = JSON.parse(pending);
+          if (data && data.message === message) {
+            sessionStorage.removeItem('pendingToast');
+          }
+        }
+      } catch (e) {}
+    }, 1500);
+  }
+
   let toastWrap = document.querySelector('.toast-wrap');
   if (!toastWrap) {
     toastWrap = document.createElement('div');
@@ -193,6 +228,7 @@ function toCSV(rows) {
 
 // Global helper: automatically open native calendar dialog when clicking on any <input type="date">
 document.addEventListener('DOMContentLoaded', function () {
+  checkPendingToast();
   document.querySelectorAll('input[type="date"]').forEach(function (input) {
     input.style.cursor = 'pointer';
     input.addEventListener('click', function (e) {

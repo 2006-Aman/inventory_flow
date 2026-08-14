@@ -189,6 +189,7 @@ class AppTopbar extends HTMLElement {
         if (signout) {
             signout.addEventListener('click', () => {
                 if (typeof logoutUser === 'function') logoutUser();
+                if (typeof showToast === 'function') showToast('Signed out successfully.', 'info');
                 window.location.href = 'login.html';
             });
         }
