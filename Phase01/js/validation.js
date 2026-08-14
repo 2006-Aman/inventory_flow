@@ -77,7 +77,10 @@ function validateSignupInput(userData) {
   const errors = {};
   if (!userData.name || !String(userData.name).trim()) errors.name = 'Name is required.';
   if (!userData.email || !isValidEmail(userData.email)) errors.email = 'Enter a valid email address.';
-  if (!userData.password || String(userData.password).length < 6) errors.password = 'Password must be at least 6 characters.';
+  if (!userData.password || String(userData.password).length < 8) errors.password = 'Password must be at least 8 characters.';
+  else if (!/[A-Z]/.test(userData.password)) errors.password = 'Password must contain at least one uppercase letter.';
+  else if (!/[0-9]/.test(userData.password)) errors.password = 'Password must contain at least one numeric digit.';
+  else if (!/[^A-Za-z0-9]/.test(userData.password)) errors.password = 'Password must contain at least one special character.';
   if (userData.password !== userData.confirm) errors.confirm = 'Passwords do not match.';
 
   // Email must not already exist in the users database

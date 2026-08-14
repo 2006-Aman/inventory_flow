@@ -57,11 +57,27 @@
             </div>
             <div class="field">
                 <label>Password</label>
-                <input id="signup-password" type="password" placeholder="At least 6 characters">
+                <div class="password-wrapper">
+                    <input id="signup-password" type="password" placeholder="Create a strong password">
+                    <button type="button" class="eye-toggle" data-target="signup-password" aria-label="Toggle password visibility">
+                        <i class="ph ph-eye"></i>
+                    </button>
+                </div>
+                <ul class="pw-requirements" id="pw-requirements">
+                    <li id="req-length"><i class="ph ph-circle"></i> At least 8 characters</li>
+                    <li id="req-upper"><i class="ph ph-circle"></i> At least one uppercase letter</li>
+                    <li id="req-number"><i class="ph ph-circle"></i> At least one numeric digit</li>
+                    <li id="req-special"><i class="ph ph-circle"></i> At least one special character</li>
+                </ul>
             </div>
             <div class="field">
                 <label>Confirm password</label>
-                <input id="signup-confirm" type="password" placeholder="Repeat your password">
+                <div class="password-wrapper">
+                    <input id="signup-confirm" type="password" placeholder="Repeat your password">
+                    <button type="button" class="eye-toggle" data-target="signup-confirm" aria-label="Toggle password visibility">
+                        <i class="ph ph-eye"></i>
+                    </button>
+                </div>
             </div>
             <button class="btn btn-gradient" type="submit"><i class="ph ph-user-check"></i> Create Account</button>
         </form>
@@ -75,6 +91,8 @@
     <script src="js/auth.js"></script>
     <script>
         initSignupPage();
+        initPasswordToggles();
+        initPasswordRequirements();
     </script>
 </body>
 </html>

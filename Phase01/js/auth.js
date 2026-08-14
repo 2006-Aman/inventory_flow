@@ -93,3 +93,54 @@ function showBanner(banner, message) {
   banner.textContent = message;
   banner.classList.add('show');
 }
+
+// ── Eye toggle: show / hide password ──
+function initPasswordToggles() {
+  document.querySelectorAll('.eye-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var targetId = btn.getAttribute('data-target');
+      var input = document.getElementById(targetId);
+      if (!input) return;
+
+      var isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+
+      var icon = btn.querySelector('i');
+      icon.className = isPassword ? 'ph ph-eye-slash' : 'ph ph-eye';
+
+      btn.classList.toggle('active', isPassword);
+
+      // bounce animation
+      icon.style.transform = 'scale(0.7)';
+      setTimeout(function () { icon.style.transform = ''; }, 150);
+    });
+  });
+}
+
+// ── Live password requirements checker (signup only) ──
+function initPasswordRequirements() {
+  var passwordInput = document.getElementById('signup-password');
+  var reqList = document.getElementById('pw-requirements');
+  if (!passwordInput || !reqList) return;
+
+  var rules = [
+    { id: 'req-length',  test: function (v) { return v.length >= 8; } },
+    { id: 'req-upper',   test: function (v) { return /[A-Z]/.test(v); } },
+    { id: 'req-number',  test: function (v) { return /[0-9]/.test(v); } },
+    { id: 'req-special', test: function (v) { return /[^A-Za-z0-9]/.test(v); } }
+  ];
+
+  passwordInput.addEventListener('input', function () {
+    var val = passwordInput.value;
+    rules.forEach(function (rule) {
+      var li = document.getElementById(rule.id);
+      if (!li) return;
+      var met = rule.test(val);
+      li.classList.toggle('met', met);
+      var icon = li.querySelector('i');
+      if (icon) {
+        icon.className = met ? 'ph ph-check-circle' : 'ph ph-circle';
+      }
+    });
+  });
+}
