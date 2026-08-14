@@ -56,9 +56,9 @@ function initializeDatabase() {
       for (const key of missing) {
         await loadJSON(key, true);
       }
-      shiftSalesDatesToToday();
     }
 
+    shiftSalesDatesToToday();
     recalculateProductMetrics();
     return true;
   })();

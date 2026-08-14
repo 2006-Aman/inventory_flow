@@ -15,27 +15,28 @@ function formatNumber(number) {
   return (Number(number) || 0).toLocaleString('en-US');
 }
 
-// Convert a stored date string like "2026-08-10 14:32" into a Date object.
+// Convert a stored date string like "2026-08-10 14:32" or "2026-08-10T14:32" into a Date object.
 // We parse it manually so it works the same in every browser.
 const _dateTsCache = {};
 function parseDate(dateString) {
   if (dateString instanceof Date) return dateString;
-  const str = String(dateString || '');
+  const str = String(dateString || '').trim();
   if (!str) return new Date(0);
   if (_dateTsCache[str] !== undefined) {
     return new Date(_dateTsCache[str]);
   }
-  const parts = str.split(' ');
+  const normalized = str.replace('T', ' ');
+  const parts = normalized.split(' ');
   const datePart = (parts[0] || '').split('-');   // [year, month, day]
   const timePart = (parts[1] || '00:00').split(':'); // [hour, minute]
-  const d = new Date(
-    Number(datePart[0]) || 1970,
-    (Number(datePart[1]) || 1) - 1,
-    Number(datePart[2]) || 1,
-    Number(timePart[0]) || 0,
-    Number(timePart[1]) || 0,
-    Number(timePart[2] || 0)
-  );
+  const year = Number(datePart[0]) || 1970;
+  const month = (Number(datePart[1]) || 1) - 1;
+  const day = parseInt(datePart[2], 10) || 1;
+  const hour = Number(timePart[0]) || 0;
+  const minute = Number(timePart[1]) || 0;
+  const second = Number(timePart[2]) || 0;
+
+  const d = new Date(year, month, day, hour, minute, second);
   _dateTsCache[str] = d.getTime();
   return d;
 }
